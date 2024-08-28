@@ -7,9 +7,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import sliderImage1 from "@/assets/avengers.jpg";
-import sliderImage2 from "@/assets/justice-league-superman-banner.png";
-import sliderImage3 from "@/assets/doctor-strange.jpg";
+import sliderImage1 from "@/assets/tent-fire.jpg";
+import sliderImage2 from "@/assets/mountain.jpg";
+import sliderImage3 from "@/assets/campingTent.jpg";
 
 export function HeroSection() {
   const sliderData = [

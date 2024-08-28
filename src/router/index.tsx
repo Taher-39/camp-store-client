@@ -1,8 +1,9 @@
 import MainLayout from "@/components/Layouts/MainLayouts";
 import Home from "@/pages/Home/Home";
-import MovieDetails from "@/pages/Movies/MovieDetails";
-import Movies from "@/pages/Movies/Movies";
+import ProductsPage from "@/pages/Products/Products";
+import ReturnPolicy from "@/pages/ReturnPolicy";
 import NotFound from "@/pages/shared/NotFound";
+import TrackOrder from "@/pages/TrackOrder";
 import { createBrowserRouter } from "react-router-dom";
 const router = createBrowserRouter([
   {
@@ -14,12 +15,20 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/movies",
-        element: <Movies />,
+        path: "/products",
+        element: <ProductsPage />,
       },
       {
-        path: "/movie/:id",
-        element: <MovieDetails />,
+        path: "/product/:id",
+        element: null,
+      },
+      {
+        path: "/return-policy",
+        element: <ReturnPolicy />,
+      },
+      {
+        path: "/track-order",
+        element: <TrackOrder />,
       },
       {
         path: "*",

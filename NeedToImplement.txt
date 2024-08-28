@@ -1,0 +1,10 @@
+1) navbar when scrool down (go footer side) this time no need show navbar, if scrool upper this time need show navbar.  
+2) view more hover color 
+3) detail product with different color with varient
+4) category section look like screen shoot 
+5) try paypal || stripe || amr pay implement 
+6) 40 Gear & Gadgets: https://www.youtube.com/watch?v=tgcBmSpx38M
+7) footer down fix, home screen content left n r8 view fix
+
+
+
