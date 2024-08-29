@@ -6,5 +6,6 @@
 6) 40 Gear & Gadgets: https://www.youtube.com/watch?v=tgcBmSpx38M
 7) footer down fix, home screen content left n r8 view fix
 
-
+8) delete contributor from client
+9) set color into config file
 

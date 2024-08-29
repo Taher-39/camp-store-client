@@ -13,7 +13,7 @@ import Rating from "react-rating";
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import { TMovie } from "@/types";
-import { useAddRatingMutation } from "@/redux/api/api";
+import { useAddRatingMutation } from "@/redux/api/baseApi";
 import { toast } from "sonner";
 
 export function RatingModal({ movie }: { movie: TMovie }) {

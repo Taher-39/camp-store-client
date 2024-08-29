@@ -1,0 +1,19 @@
+.image-container {
+    position: relative;
+  }
+  
+  .product-image {
+    width: 100%;
+  }
+  
+  .magnifier {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    background-repeat: no-repeat;
+    background-size: 200%;
+    pointer-events: none;
+  }
+  
