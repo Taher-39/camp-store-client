@@ -40,7 +40,7 @@ const CheckoutPage = () => {
     } else if (paymentMethod === "stripe") {
       // Redirect to Stripe payment page
       // Implement actual Stripe integration here
-      navigate("/stripe-payment"); // Example redirection, replace with actual Stripe handling
+      navigate("/stripe-payment"); 
     }
   };
 

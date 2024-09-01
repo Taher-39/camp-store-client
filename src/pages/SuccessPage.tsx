@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"; // Correct import for Link
 
 const SuccessPage = () => {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 min-h-screen" >
       <h2 className="text-3xl font-bold mb-6">Order Successful!</h2>
       <p className="text-lg mb-4">
         Your order has been placed successfully. Thank you for shopping with us!

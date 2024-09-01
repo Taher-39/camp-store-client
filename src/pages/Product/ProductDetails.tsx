@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetSingleProductsQuery } from "@/redux/features/product/productApi";
+import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { addItemToCart } from "@/redux/features/cart/cartSlice";
 
 const ProductDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useGetSingleProductsQuery(id);
+  const { data, isLoading, isError } = useGetSingleProductQuery(id);
   const product = data?.data
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
@@ -24,7 +24,7 @@ const ProductDetailsPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <img
           src={product.image}

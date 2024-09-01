@@ -13,7 +13,7 @@ export default function Navbar() {
   const cartQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <header className="bg-white shadow-md py-4 sticky top-0 z-50">
+    <header className="bg-white shadow-md py-4 sticky top-0 z-40">
       <div className="container mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src={camplogo} alt="Camp Logo" className="w-12 h-12 mr-2" />
@@ -33,10 +33,10 @@ export default function Navbar() {
             Products
           </Link>
           <Link
-            to="/contact"
+            to="/product-management"
             className="text-gray-600 hover:text-[#3712c2] font-medium transition-colors duration-300"
           >
-            Contact
+            Management
           </Link>
           <Link
             to="/wishlist"
@@ -44,7 +44,7 @@ export default function Navbar() {
           >
             <Heart className="w-6 h-6" />
             <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
-              2
+              0
             </span>
           </Link>
           <button
@@ -85,11 +85,11 @@ export default function Navbar() {
             Products
           </Link>
           <Link
-            to="/contact"
+            to="/product-management"
             className="text-gray-600 hover:text-[#3712c2] font-medium py-2"
             onClick={() => setIsMenuOpen(false)}
           >
-            Contact
+            Management
           </Link>
           <Link
             to="/wishlist"

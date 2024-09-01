@@ -1,7 +1,7 @@
 export default function ReturnPolicy() {
   return (
-    <>
-      <main className="py-12 px-4 bg-gray-100">
+    <div className="min-h-screen  bg-gray-100">
+      <main className="py-12 px-4">
         <div className="container mx-auto">
           <h1 className="text-4xl font-bold mb-6">Return Policy</h1>
           <p className="text-lg mb-4">
@@ -9,6 +9,6 @@ export default function ReturnPolicy() {
           </p>
         </div>
       </main>
-    </>
+    </div>
   );
 }

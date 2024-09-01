@@ -47,7 +47,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"

@@ -23,7 +23,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
 
       {cartItems.length ? (
@@ -71,6 +71,7 @@ const CartPage = () => {
 
           <div className="border-t border-gray-300 pt-4">
             <h3 className="text-xl font-bold">Total: ${calculateTotalPrice()}</h3>
+            <div className="mt-4">
             <Link
               to="/checkout"
               className={`mt-4 px-4 py-2 rounded-md text-white ${
@@ -84,6 +85,7 @@ const CartPage = () => {
             >
               Place Order
             </Link>
+            </div>
           </div>
         </div>
       ) : (

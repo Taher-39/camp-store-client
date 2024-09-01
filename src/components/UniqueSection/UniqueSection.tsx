@@ -2,23 +2,6 @@ import { useEffect, useRef } from "react";
 import wildness from "@/assets/Videos/campingTent.mp4";
 import Destinations from "@/assets/Videos/10 Best Camping Sites in Washington State to Explore.mp4";
 
-const uniqueContent = [
-  {
-    id: 1,
-    title: "Exploring the Wilderness",
-    description:
-      "Join our recent tour group as they explore the uncharted wilderness.",
-    videoUrl: wildness,
-  },
-  {
-    id: 2,
-    title: "Top Destinations of 2024",
-    description:
-      "Check out the top destinations our tour groups visited this year.",
-    videoUrl: Destinations,
-  },
-];
-
 function useVideoVisibility(videoRef: React.RefObject<HTMLVideoElement>) {
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -48,27 +31,39 @@ export default function UniqueSection() {
         <h2 className="text-3xl font-bold text-center mb-12">
           Featured <span style={{ color: "#4952b2" }}>Content</span>
         </h2>
-        {uniqueContent.map((content, index) => (
-          <div
-            key={content.id}
-            className={`mb-16 grid grid-cols-1 md:grid-cols-2 gap-8 ${
-              (index + 1) % 2 === 0 ? "md:flex-row-reverse" : ""
-            }`}
-          >
-            <VideoContent videoUrl={content.videoUrl} />
-            <div className="flex flex-col justify-center">
-              <h3
-                className="text-2xl font-bold mb-4"
-                style={{ color: "#4952b2" }}
-              >
-                {content.title}
-              </h3>
-              <p className="text-gray-600 text-lg leading-relaxed mb-4">
-                {content.description}
-              </p>
-            </div>
+
+        {/* First Video Section */}
+        <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <VideoContent videoUrl={wildness} />
+          <div className="flex flex-col justify-center">
+            <h3
+              className="text-2xl font-bold mb-4"
+              style={{ color: "#4952b2" }}
+            >
+              Exploring the Wilderness
+            </h3>
+            <p className="text-gray-600 text-lg leading-relaxed mb-4">
+              Join our recent tour group as they explore the uncharted
+              wilderness.
+            </p>
           </div>
-        ))}
+        </div>
+
+        {/* Second Video Section */}
+        <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:flex-row-reverse">
+          <div className="flex flex-col justify-center">
+            <h3
+              className="text-2xl font-bold mb-4"
+              style={{ color: "#4952b2" }}
+            >
+              Top Destinations of 2024
+            </h3>
+            <p className="text-gray-600 text-lg leading-relaxed mb-4">
+              Check out the top destinations our tour groups visited this year.
+            </p>
+          </div>
+          <VideoContent videoUrl={Destinations} />
+        </div>
       </div>
     </section>
   );
