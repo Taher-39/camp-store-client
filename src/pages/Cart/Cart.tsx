@@ -75,7 +75,7 @@ const CartPage = () => {
             <Link
               to="/checkout"
               className={`mt-4 px-4 py-2 rounded-md text-white ${
-                cartItems.some((item) => item.quantity < 1) ? "bg-gray-400 cursor-not-allowed" : "bg-[#9EA647] hover:bg-[#3712c2]"
+                cartItems.some((item) => item.quantity < 1) ? "bg-gray-400 cursor-not-allowed" : "bg-[#4952b2] hover:bg-[#3712c2]"
               }`}
               onClick={(e) => {
                 if (cartItems.some((item) => item.quantity < 1)) {
@@ -85,6 +85,7 @@ const CartPage = () => {
             >
               Place Order
             </Link>
+            <Link to='/products'></Link>
             </div>
           </div>
         </div>

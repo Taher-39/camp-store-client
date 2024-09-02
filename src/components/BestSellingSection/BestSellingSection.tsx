@@ -57,8 +57,7 @@ export default function BestSellingSection() {
         <div className="text-center mt-8">
           <Link
             to="/products"
-            className="inline-block px-6 py-3 text-white"
-            style={{ backgroundColor: "#4952b2" }}
+            className="inline-block px-6 py-3 text-white bg-[#4952b2] hover:bg-[#3712c2]"
           >
             View More
           </Link>

@@ -40,7 +40,7 @@ export default function FAQSection() {
     <section className="py-12 bg-gray-100">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">
-          Frequently Asked Questions
+          FAQ
         </h2>
         <div className="w-full max-w-2xl p-2 mx-auto bg-white rounded-2xl">
           {faqs.map((faq, index) => (

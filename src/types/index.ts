@@ -1,8 +1,9 @@
 export type TProduct = {
-    name: string;
-    description: string;
-    category: string;
-    status: string;
-    price: number;
-    quantity: number;
+    _id?: string | null;
+    name: string | null;
+    description: string | null;
+    category: string | null;
+    status: string | null;
+    price: number | null;
+    quantity: number | null;
   };

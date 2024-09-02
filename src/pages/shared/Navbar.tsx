@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import camplogo from "@/assets/campVectorLogo.png";
 import { RootState } from "@/redux/store";
 import { useAppSelector } from "@/redux/hooks";
@@ -8,12 +8,39 @@ import { useAppSelector } from "@/redux/hooks";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDialogOpen, setIsCartDialogOpen] = useState(false);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
   const cartItems = useAppSelector((state: RootState) => state.cart.items);
 
   const cartQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScrollTop > lastScrollTop) {
+        setIsNavbarVisible(false);
+      } else {
+        setIsNavbarVisible(true);
+      }
+      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop); 
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollTop]);
+
   return (
-    <header className="bg-white shadow-md py-4 sticky top-0 z-40">
+    <header
+      className={`bg-white shadow-md py-4 sticky top-0 z-40 transition-transform duration-300 ${
+        isNavbarVisible
+          ? "transform translate-y-0"
+          : "transform -translate-y-full"
+      }`}
+    >
       <div className="container mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src={camplogo} alt="Camp Logo" className="w-12 h-12 mr-2" />
@@ -98,7 +125,7 @@ export default function Navbar() {
           >
             <Heart className="w-6 h-6 inline-block" />
             <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
-              2
+              0
             </span>
             Wishlist
           </Link>
@@ -112,7 +139,7 @@ export default function Navbar() {
             <ShoppingCart className="w-6 h-6 inline-block" />
             {cartQuantity > 0 && (
               <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
-                {cartQuantity}
+                {cartQuantity} 
               </span>
             )}
             Cart

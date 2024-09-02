@@ -124,7 +124,7 @@ const CheckoutPage = () => {
 
         <button
           type="submit"
-          className="bg-[#9EA647] hover:bg-[#3712c2] text-white px-4 py-2 rounded-md"
+          className="bg-[#4952b2] hover:bg-[#3712c2] text-white px-4 py-2 rounded-md"
         >
           Place Order
         </button>

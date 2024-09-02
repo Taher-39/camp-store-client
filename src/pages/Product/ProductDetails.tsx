@@ -63,7 +63,7 @@ const ProductDetailsPage = () => {
             className={`mt-4 px-4 py-2 rounded-md text-white ${
               quantity > product.quantity
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#9EA647] hover:bg-[#3712c2]"
+                : "bg-[#4952b2] hover:bg-[#3712c2]"
             }`}
           >
             Add to Cart

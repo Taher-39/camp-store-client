@@ -1,5 +1,5 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ProductsPage = () => {
@@ -8,16 +8,14 @@ const ProductsPage = () => {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [sortOrder, setSortOrder] = useState("");
 
-  const { data, isLoading, isError } = useGetProductsQuery(undefined);
-
+  const { data, isLoading, isSuccess, } = useGetProductsQuery(undefined);
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  if (isError) {
-    return <div>Error loading products.</div>;
+  
+  if (!isSuccess || data?.data?.length === 0) {
+    return <div>No products available.</div>;
   }
-
   const filteredProducts = data?.data
     ?.filter(
       (product: { name: string; description: string }) =>
@@ -100,18 +98,17 @@ const ProductsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {filteredProducts.map(
           (product: {
-            id: Key | null | undefined;
             images: string | undefined;
             name: string;
             price: number;
             _id: string;
           }) => (
             <div
-              key={product.id}
+              key={product._id}
               className="border border-gray-300 p-4 rounded-md"
             >
               <img
-                src={product.images}
+                // src={product.images}
                 alt="product img"
                 className="w-full h-48 object-cover mb-4 rounded-md"
               />
