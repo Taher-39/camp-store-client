@@ -1,29 +1,23 @@
+import { useGetBestSellingProductsQuery } from "@/redux/features/product/productApi";
+import { TProduct } from "@/types";
+import { Loader2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
-import campingTent from "@/assets/CampingTent/family/two/main.avif";
-import SleepingBag from "@/assets/sleeping-bag/one/1.1/250-artic-dusk-HI-5-large.webp";
-import PortableStove from "@/assets/Portable Stove/picture.avif";
-const products = [
-  {
-    id: 1,
-    name: "Camping Tent",
-    image: campingTent,
-    price: "$199",
-  },
-  {
-    id: 2,
-    name: "Sleeping Bag",
-    image: SleepingBag,
-    price: "$79",
-  },
-  {
-    id: 3,
-    name: "Portable Stove",
-    image: PortableStove,
-    price: "$59",
-  },
-];
 
 export default function BestSellingSection() {
+  const { data, isLoading, isError } =
+    useGetBestSellingProductsQuery(undefined);
+  const products = data?.data || [];
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2Icon className="w-5 h-5" />
+        Loading...
+      </div>
+    );
+
+  if (isError) return <div>Failed to load best-selling products</div>;
+
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto">
@@ -31,9 +25,9 @@ export default function BestSellingSection() {
           <span style={{ color: "#4952b2" }}>Best Selling </span>Products
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {products.map((product) => (
+          {products.map((product: TProduct) => (
             <div
-              key={product.id}
+              key={product._id}
               className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center"
             >
               <img
@@ -44,9 +38,9 @@ export default function BestSellingSection() {
               <h3 className="text-lg font-medium text-gray-800">
                 {product.name}
               </h3>
-              <p className="text-gray-600">{product.price}</p>
+              <p className="text-gray-600">${product.price}</p>
               <Link
-                to={`/product/${product.id}`}
+                to={`/products/${product._id}`}
                 className="mt-4 inline-block text-blue-600 hover:text-blue-800 font-semibold"
               >
                 View Details

@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import Modal from "react-modal";
+import { PencilIcon, TrashIcon, PlusIcon, Loader2Icon } from "lucide-react";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
 } from "@/redux/features/product/productApi";
-import Modal from "react-modal";
-import { PencilIcon, TrashIcon, PlusIcon } from "lucide-react";
-import { toast } from "sonner";
 
 // Initialize Modal
 Modal.setAppElement("#root");
@@ -21,6 +21,8 @@ const ProductManagementPage = () => {
   const [deleteProduct] = useDeleteProductMutation();
   const [editingProduct, setEditingProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [categories, setCategories] = useState([
     "Camping Tents",
     "Camping Shelters and Tarps",
@@ -42,24 +44,30 @@ const ProductManagementPage = () => {
       left: "50%",
       right: "auto",
       bottom: "auto",
+      width: "500px",
       transform: "translate(-50%, -50%)",
     },
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      const res = await deleteProduct(id);
-      if (res.data.success) {
-        toast.success(res.data.message);
-        refetch();
-      } else {
-        toast.error("Error occurred while deleting product.");
+      try {
+        const res = await deleteProduct(id);
+        if (res.data.success) {
+          toast.success(res.data.message);
+          refetch();
+        } else {
+          toast.error("Error occurred while deleting product.");
+        }
+      } catch (error) {
+        toast.error("Failed to delete product.");
       }
     }
   };
 
   const handleEdit = (product) => {
     setEditingProduct(product);
+    setImageUrl(product.image || "");
     setIsModalOpen(true);
   };
 
@@ -68,54 +76,78 @@ const ProductManagementPage = () => {
       name: "",
       description: "",
       category: "",
-      status: "",
       price: "",
       quantity: "",
+      image: "",
     });
+    setImageUrl("");
     setIsModalOpen(true);
   };
 
   const handleSave = async (product) => {
+    const formattedProduct = {
+      ...product,
+      price: Number(product.price),
+      quantity: Number(product.quantity),
+      status: product.quantity > 0 ? "in-stock" : "out-of-stock",
+      image: imageUrl || editingProduct?.image,
+    };
+
     try {
-      // Convert price and quantity to numbers
-      const formattedProduct = {
-        ...product,
-        price: Number(product.price),
-        quantity: Number(product.quantity),
-        status: product.quantity > 0 ? "in-stock" : "out-of-stock",
-      };
-
       let response;
-
       if (editingProduct?._id) {
-        // Update existing product
         response = await updateProduct({
           id: editingProduct._id,
           updatedProduct: formattedProduct,
         });
-
         if (response?.data?.success) {
           toast.success("Product updated successfully.");
-          refetch();
         } else {
           toast.error(response?.data?.message || "Failed to update product.");
         }
       } else {
-        // Create new product
         response = await createProduct(formattedProduct);
         if (response?.data?.success) {
           toast.success("Product created successfully.");
-          refetch();
         } else {
           toast.error(response?.data?.message || "Failed to create product.");
         }
       }
-
-      setEditingProduct(null);
+      refetch();
       setIsModalOpen(false);
     } catch (error) {
-      console.error("Error saving product:", error);
       toast.error("An error occurred while saving the product.");
+    }
+  };
+
+  const handleImageUpload = async () => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "CampStore");
+    data.append("cloud_name", "do0ujomfx");
+    try {
+      if (!image) {
+        return toast.error("Please upload an image.");
+      }
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/do0ujomfx/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const cloudData = await res.json();
+      console.log("cloudData", cloudData);
+      if (cloudData.url) {
+        setImageUrl(cloudData.url);
+        toast.success("Image uploaded successfully.");
+      } else {
+        toast.error("Image upload failed.");
+      }
+    } catch (error) {
+      toast.error("Error uploading image.");
     }
   };
 
@@ -147,7 +179,12 @@ const ProductManagementPage = () => {
 
   let content;
   if (isLoading) {
-    content = <p className="text-2xl text-center my-6">Loading...</p>;
+    content = (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2Icon className="w-5 h-5" />
+        Loading...
+      </div>
+    );
   } else if (isSuccess) {
     content = (
       <div className="container mx-auto py-8">
@@ -173,7 +210,7 @@ const ProductManagementPage = () => {
               <tr key={product._id}>
                 <td className="border px-4 py-2">
                   <img
-                    // src={product.image}
+                    src={product.image}
                     alt={product.name}
                     className="w-16 h-16 object-cover"
                   />
@@ -256,80 +293,123 @@ const ProductManagementPage = () => {
             handleSave(productData);
           }}
         >
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              defaultValue={editingProduct?.name}
-              className="w-full px-3 py-2 border rounded"
-              required
-            />
+          <div className="flex justify-between">
+            <div className="flex flex-col mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                defaultValue={editingProduct?.name || ""}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Description
+              </label>
+              <textarea
+                name="description"
+                defaultValue={editingProduct?.description || ""}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Description
-            </label>
-            <textarea
-              name="description"
-              defaultValue={editingProduct?.description}
-              className="w-full px-3 py-2 border rounded"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
+          <div className="flex flex-col mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Category
             </label>
-            <select
-              name="category"
-              defaultValue={editingProduct?.category}
-              className="w-full px-3 py-2 border rounded"
-              required
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={addNewCategory}
-              className="text-blue-500 hover:text-blue-700 mt-2"
-            >
-              Add New Category
-            </button>
+            <div className="flex items-center space-x-2">
+              <select
+                name="category"
+                defaultValue={editingProduct?.category || ""}
+                className="w-full px-3 py-2 border rounded"
+                required
+              >
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={addNewCategory}
+                className="flex items-center justify-center p-2 border rounded bg-[#4952b2] text-white"
+              >
+                <PlusIcon className="h-5 w-5  " />
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between ">
-            <div className="mr-4">
+
+          <div className="flex justify-between">
+            <div className="flex flex-col mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Price
               </label>
               <input
                 type="number"
                 name="price"
-                defaultValue={editingProduct?.price}
+                defaultValue={editingProduct?.price || ""}
                 className="w-full px-3 py-2 border rounded"
                 required
+                min="0"
               />
             </div>
 
-            <div className="mb-4">
+            <div className="flex flex-col mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Quantity
               </label>
               <input
                 type="number"
                 name="quantity"
-                defaultValue={editingProduct?.quantity}
+                defaultValue={editingProduct?.quantity || ""}
                 className="w-full px-3 py-2 border rounded"
                 required
+                min="0"
               />
+            </div>
+          </div>
+
+          <div className="flex flex-col mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Image URL
+            </label>
+            <input
+              type="text"
+              name="image"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            />
+            <div className="flex items-center mt-2">
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer bg-[#4952b2] text-white px-4 py-2 rounded"
+              >
+                Select Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+              {image && (
+                <button
+                  type="button"
+                  onClick={handleImageUpload}
+                  className="text-white px-4 py-2 rounded-md ml-2 bg-[#4952b2] hover:bg-[#3712c2]"
+                >
+                  Upload Image
+                </button>
+              )}
             </div>
           </div>
 
@@ -337,15 +417,15 @@ const ProductManagementPage = () => {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="text-gray-700 px-4 py-2 mr-2"
+              className="px-4 py-2 mr-2 border rounded text-gray-700"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="text-white px-4 py-2 rounded bg-[#4952b2] hover:bg-[#3712c2]"
+              className="px-4 py-2 bg-[#4952b2] text-white rounded"
             >
-              Save
+              {editingProduct?._id ? "Update Product" : "Create Product"}
             </button>
           </div>
         </form>

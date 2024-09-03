@@ -1,22 +1,19 @@
-5) cart don't add other product or same product or increased after add a product so fix this issues 
-6.3) before refresh show message for empty cart 
-1) fetch 3 best selling product from db basead on sellCount
-    (add bd model sellCount, when a product order confirm this time it increased & quentity decrease)
-6) Single Image add features,
-    6.1) if posible add more images for a single product
-    6.2) Image magnifier 
-3) show quentity and color `In-Stock` if any product after order quentity 0 this time it show `out-of-stock` 
-   or decrease  quentity
+
+6) cart page button and view | before refresh show message for empty cart 
 2) when a select ctg then its show this ctg product only inside products page
+
+
+12) fix font color, set global font 
 7) home screen content left n r8 view fix
 8) delete contributor from client
 9) responsive check also other check if have time 
 11) handle error of all pages
-12) fix font color, set global font 
 10) Before submit check deploy link are work well or not
+13) toast time handle
 
 optional: 
 11) .env example add into backend
+13) add wishlist logo if product has  `Out-of-Stock` based 
 12) recently watched products list into product details page 
 10) Order details page 
 11) track order features 

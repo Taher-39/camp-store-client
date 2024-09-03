@@ -18,6 +18,12 @@ const productApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getBestSellingProducts: builder.query({
+      query: () => ({
+        url: "/products/best-selling-products",
+        method: "GET",
+      }),
+    }),
     getSingleProduct: builder.query({
       query: (id) => ({
         url: `/products/${id}`,
@@ -26,13 +32,19 @@ const productApi = baseApi.injectEndpoints({
     }),
     updateProduct: builder.mutation({
       query: ({ id, updatedProduct }) => {
-        console.log("Comes from updateProduct rtk=>", id, updatedProduct);
         return {
           url: `/products/${id}`,
           method: "PUT",
           body: updatedProduct,
         };
       },
+    }),
+    updateSalesAndStock: builder.mutation({
+      query: (products) => ({
+        url: '/products/update-sales-and-stock',
+        method: 'POST',
+        body: { products },
+      }),
     }),
     deleteProduct: builder.mutation({
       query: (id) => {
@@ -48,8 +60,10 @@ const productApi = baseApi.injectEndpoints({
 export const {
   useGetProductsQuery,
   useGetSingleProductQuery,
+  useGetBestSellingProductsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useUpdateSalesAndStockMutation,
   useDeleteProductMutation,
 } = productApi;
 

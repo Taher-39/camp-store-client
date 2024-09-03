@@ -3,9 +3,11 @@ import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import teamMember1 from "@/assets/TeamMember/Abu Taher.jpg";
 import teamMember2 from "@/assets/TeamMember/Team-memeber-01.png";
 
+
 const AboutUsPage = () => {
   return (
     <div className="container mx-auto py-8">
+
       {/* Contact Information */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Contact Information</h2>
@@ -80,8 +82,8 @@ const AboutUsPage = () => {
             <h3 className="text-xl font-bold">Abu Taher</h3>
             <p className="text-gray-500">Founder & CEO</p>
             <p className="mt-2">
-              Abu Taher is passionate about the outdoors and started CampStore to
-              share his love for adventure with others.
+              Abu Taher is passionate about the outdoors and started CampStore
+              to share his love for adventure with others.
             </p>
           </div>
           <div className="text-center">

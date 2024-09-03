@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 
 interface CartItem {
-  id: string;
+  _id: string;
   name: string;
   price: number;
   quantity: number;
@@ -27,13 +27,13 @@ const cartSlice = createSlice({
   reducers: {
     addItemToCart: (state, action: PayloadAction<CartItem>) => {
       const existingItem = state.items.find(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
 
       if (existingItem) {
-        // Increment the quantity if it's within the stock limit
-        if (existingItem.quantity < existingItem.stock) {
-          existingItem.quantity += action.payload.quantity;
+        const newQuantity = existingItem.quantity + action.payload.quantity;
+        if (newQuantity <= existingItem.stock) {
+          existingItem.quantity = newQuantity;
           toast.success(`${existingItem.name} quantity updated!`);
         } else {
           toast.error(
@@ -41,17 +41,19 @@ const cartSlice = createSlice({
           );
         }
       } else {
-        // Add new item to the cart
-        state.items.push(action.payload);
+        state.items.push({
+          ...action.payload,
+          quantity: action.payload.quantity,
+        });
         toast.success(`${action.payload.name} added to cart!`);
       }
     },
 
     updateCartItemQuantity: (
       state,
-      action: PayloadAction<{ id: string; quantity: number }>
+      action: PayloadAction<{ _id: string; quantity: number }>
     ) => {
-      const item = state.items.find((item) => item.id === action.payload.id);
+      const item = state.items.find((item) => item._id === action.payload._id);
       if (
         item &&
         action.payload.quantity >= 1 &&
@@ -63,10 +65,12 @@ const cartSlice = createSlice({
         toast.error("Quantity exceeds stock limits!");
       }
     },
+
     removeItemFromCart: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+      state.items = state.items.filter((item) => item._id !== action.payload);
       toast.success("Item removed from cart!");
     },
+
     clearCart: (state) => {
       state.items = [];
       toast.success("Cart cleared!");
@@ -74,7 +78,10 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addItemToCart, updateCartItemQuantity, removeItemFromCart, clearCart } =
-  cartSlice.actions;
-
+export const {
+  addItemToCart,
+  updateCartItemQuantity,
+  removeItemFromCart,
+  clearCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;

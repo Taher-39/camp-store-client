@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"; // Correct import for Link
+import { Link } from "react-router-dom"; 
 
 const SuccessPage = () => {
   return (

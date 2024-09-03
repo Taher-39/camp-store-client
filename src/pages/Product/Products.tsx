@@ -1,4 +1,5 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
+import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,11 +9,14 @@ const ProductsPage = () => {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [sortOrder, setSortOrder] = useState("");
 
-  const { data, isLoading, isSuccess, } = useGetProductsQuery(undefined);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
+  const { data, isLoading, isSuccess } = useGetProductsQuery(undefined);
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2Icon className="w-5 h-5" />
+        Loading...
+      </div>
+    );
   if (!isSuccess || data?.data?.length === 0) {
     return <div>No products available.</div>;
   }
@@ -102,18 +106,30 @@ const ProductsPage = () => {
             name: string;
             price: number;
             _id: string;
+            status: string;
           }) => (
             <div
               key={product._id}
               className="border border-gray-300 p-4 rounded-md"
             >
               <img
-                // src={product.images}
+                src={product.image}
                 alt="product img"
                 className="w-full h-48 object-cover mb-4 rounded-md"
               />
               <h3 className="text-lg font-bold">{product.name}</h3>
-              <p className="text-gray-500">${product.price}</p>
+              <div className="flex justify-between">
+                <p className="text-gray-500">${product.price}</p>
+                <p
+                  className={
+                    product.status === "in-stock"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }
+                >
+                  {product.status}
+                </p>
+              </div>
               <Link
                 to={`/products/${product._id}`}
                 className="text-blue-500 hover:text-blue-700 mt-2 inline-block"

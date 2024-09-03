@@ -1,4 +1,5 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
+import { Loader2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface Product {
@@ -14,12 +15,16 @@ export default function FeaturedProductsSection() {
 
   // Randomly select 3 products
   const featuredProducts = [...products]
-    .sort(() => 0.5 - Math.random()) // Randomize the order of products
-    .slice(0, 3); // Select the first 3 products
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2Icon className="w-5 h-5" />
+        Loading...
+      </div>
+    );
 
   if (!isSuccess || featuredProducts.length === 0) {
     return <div>No products available.</div>;
