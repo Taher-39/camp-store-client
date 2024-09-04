@@ -1,3 +1,4 @@
+import IndivisualCategory from "@/components/CategoriesSection/IndivisualCategory";
 import MainLayout from "@/components/Layouts/MainLayouts";
 import AboutUsPage from "@/pages/AboutUs/AboutUs";
 import CartPage from "@/pages/Cart/Cart";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <ProductDetailsPage />,
+      },
+      {
+        path: "/category",
+        element: <IndivisualCategory />,
       },
       {
         path: "/cart",

@@ -37,12 +37,12 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="py-12 bg-gray-100">
+    <section className="py-12 bg-gray-50">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">
           FAQ
         </h2>
-        <div className="w-full max-w-2xl p-2 mx-auto bg-white rounded-2xl">
+        <div className="w-full max-w-5xl p-2 mx-auto bg-white rounded-2xl">
           {faqs.map((faq, index) => (
             <div key={index} className="mt-2">
               <button

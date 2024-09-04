@@ -72,6 +72,7 @@ const CheckoutPage = () => {
           toast.success("Order placed successfully!");
           dispatch(clearCart());
           navigate("/success");
+          window.location.reload();
         } else {
           throw new Error("Some products could not be updated.");
         }
@@ -165,7 +166,7 @@ const CheckoutPage = () => {
       <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-md ml-6 mt-6 lg:mt-0">
         <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
         {cartItems.map((item) => (
-          <div key={item.id} className="flex items-center mb-4">
+          <div key={item._id} className="flex items-center mb-4">
             <img
               src={item.image}
               alt={item.name}

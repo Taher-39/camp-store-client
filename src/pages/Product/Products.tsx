@@ -18,9 +18,21 @@ const ProductsPage = () => {
       </div>
     );
   if (!isSuccess || data?.data?.length === 0) {
-    return <div>No products available.</div>;
+    return <div className="h-screen">No products available.</div>;
   }
-  const filteredProducts = data?.data
+  const products = data?.data;
+
+  const uniqueCategories = products.reduce((acc, product) => {
+    if (!acc.some((item) => item.category === product.category)) {
+      acc.push({
+        category: product.category,
+        _id: product._id,
+      });
+    }
+    return acc;
+  }, []);
+
+  const filteredProducts = products
     ?.filter(
       (product: { name: string; description: string }) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,7 +62,7 @@ const ProductsPage = () => {
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
         <input
           type="text"
           placeholder="Search Products"
@@ -59,16 +71,18 @@ const ProductsPage = () => {
           className="border border-gray-300 p-2 rounded-md w-full max-w-xs"
         />
 
-        <div className="flex space-x-4">
+        <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="border border-gray-300 p-2 rounded-md"
           >
             <option value="">All Categories</option>
-            <option value="Outdoor Gear">Outdoor Gear</option>
-            <option value="Outdoor Clothing">Outdoor Clothing</option>
-            <option value="Survival Tools">Survival Tools</option>
+            {uniqueCategories.map((category) => (
+              <option key={category._id} value={category.category}>
+                {category.category}
+              </option>
+            ))}
           </select>
 
           <input
@@ -92,7 +106,7 @@ const ProductsPage = () => {
 
           <button
             onClick={clearFilters}
-            className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            className="bg-[#4952b2] hover:bg-[#3712c2] text-white px-4 py-2 rounded-md"
           >
             Clear
           </button>
@@ -132,7 +146,7 @@ const ProductsPage = () => {
               </div>
               <Link
                 to={`/products/${product._id}`}
-                className="text-blue-500 hover:text-blue-700 mt-2 inline-block"
+                className="text-blue-500 hover:text-[#3712c2] mt-2 inline-block"
               >
                 View Details
               </Link>

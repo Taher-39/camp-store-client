@@ -8,6 +8,7 @@ import {
   useUpdateProductMutation,
   useDeleteProductMutation,
 } from "@/redux/features/product/productApi";
+import './ProductManagement.css'
 
 // Initialize Modal
 Modal.setAppElement("#root");
@@ -187,7 +188,7 @@ const ProductManagementPage = () => {
     );
   } else if (isSuccess) {
     content = (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 custom-scrollbar">
         <h2 className="text-2xl font-bold mb-4">Product Management</h2>
         <button
           onClick={handleCreate}

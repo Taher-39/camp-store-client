@@ -1,22 +1,14 @@
 import Home from "./pages/Home/Home";
-import usePageUnloadWarning from "./utils/usePageUnloadWarning";
+import PageReloadWarning from "./utils/PageReloadWarning";
 
 const App: React.FC = () => {
-  usePageUnloadWarning();
+  
   return (
     <div>
+      <PageReloadWarning />
       <Home></Home>
     </div>
   );
 };
 
 export default App;
-
-
-
-
-
-
-
-
-

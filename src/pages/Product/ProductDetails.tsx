@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addItemToCart, updateCartItemQuantity } from "@/redux/features/cart/cartSlice";
+import {
+  addItemToCart,
+  updateCartItemQuantity,
+} from "@/redux/features/cart/cartSlice";
 import "./ProductDetails.css";
 import { Loader2Icon } from "lucide-react";
 import { magnify } from "@/utils/ImageMagnifier";
@@ -31,22 +34,44 @@ const ProductDetailsPage = () => {
     );
 
   if (isError || !product) {
-    return <div>Product not found</div>;
+    return (
+      <div className="min-h-screen text-center text-4xl mt-6">
+        Product not found
+      </div>
+    );
   }
 
   const handleAddToCart = () => {
     const existingProduct = cartItems.find((item) => item._id === product._id);
     if (existingProduct) {
       const newQuantity = existingProduct.quantity + quantity;
-      if (newQuantity > product.quantity) {
+      if (newQuantity > existingProduct.availableStock) {
         toast.info("Cannot add more than available stock");
       } else {
         dispatch(
-          updateCartItemQuantity({ id: product._id, quantity: newQuantity })
+          updateCartItemQuantity({ _id: product._id, quantity: newQuantity })
         );
+        toast.success("Product quantity updated in cart");
       }
     } else {
-      dispatch(addItemToCart({ ...product, quantity }));
+      if (quantity > product.quantity) {
+        toast.info("Cannot add more than available stock");
+      } else {
+        dispatch(
+          addItemToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity,
+            availableStock: product.quantity,
+            image: product.image,
+            status: product.status,
+            category: product.category,
+            description: product.description,
+          })
+        );
+        toast.success("Product added to cart");
+      }
     }
   };
 
@@ -74,7 +99,7 @@ const ProductDetailsPage = () => {
                   : "text-red-500 ml-3"
               }
             >
-              {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+              {product.status}
             </p>
           </div>
           <p className="text-sm text-gray-700 my-4">{product.description}</p>
@@ -100,7 +125,12 @@ const ProductDetailsPage = () => {
                 id="quantity"
                 type="number"
                 value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  if (val >= 1 && val <= product.quantity) {
+                    setQuantity(val);
+                  }
+                }}
                 min="1"
                 max={product.quantity}
                 className="border border-gray-300 p-2 rounded-md w-16 text-center mx-2"

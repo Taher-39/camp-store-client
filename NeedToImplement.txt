@@ -1,15 +1,11 @@
+7) cart clear notification not work
+8) after order success we need a realod/refresh
 
-6) cart page button and view | before refresh show message for empty cart 
-2) when a select ctg then its show this ctg product only inside products page
 
-
-12) fix font color, set global font 
 7) home screen content left n r8 view fix
 8) delete contributor from client
-9) responsive check also other check if have time 
 11) handle error of all pages
 10) Before submit check deploy link are work well or not
-13) toast time handle
 
 optional: 
 11) .env example add into backend
@@ -19,7 +15,7 @@ optional:
 11) track order features 
 12) Authentication & Authorization features
 9)  set color into config file
-3)  detail product with different color with varient
+3)  detail product with different color with varient with more images
 4)  category section look like screen shoot 
 5)  try paypal || stripe || amr pay implement 
 

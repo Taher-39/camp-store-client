@@ -43,14 +43,14 @@ export default function FeaturedProductsSection() {
               className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center transition-transform transform hover:scale-105"
             >
               <img
-                src={product.image} // Assuming `product.image` is a valid URL
+                src={product.image}
                 alt={product.name}
                 className="w-full h-48 object-cover mb-4 rounded-lg"
               />
               <h3 className="text-lg font-medium text-gray-800 mb-2">
                 {product.name}
               </h3>
-              <p className="text-gray-600 mb-4">{product.price}</p>
+              <p className="text-gray-600 mb-4">$ {product.price}</p>
               <Link
                 to={`/products/${product._id}`}
                 className="inline-block px-6 py-3 text-white bg-[#4952b2] hover:bg-[#3712c2] font-semibold rounded-md"
