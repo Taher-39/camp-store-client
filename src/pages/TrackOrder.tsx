@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 export default function TrackOrder() {
@@ -9,7 +10,12 @@ export default function TrackOrder() {
           <p className="text-lg mb-4">
             To track your order, enter your tracking number below. You'll receive updates on the status of your shipment via email.
           </p>
-         
+          <Link
+            to="/"
+            className="my-10 px-6 py-3  text-white rounded-lg bg-[#4952b2] hover:bg-[#3712c2] transition-colors"
+          >
+            Go to Homepage
+          </Link>
         </div>
       </main>
     </>

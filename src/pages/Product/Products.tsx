@@ -24,14 +24,16 @@ const ProductsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [sortOrder, setSortOrder] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 9; // 3 rows * 3 products per row
 
   const { data, isLoading, isSuccess } = useGetProductsQuery(undefined);
 
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-      <Loader className="animate-spin text-4xl text-gray-600" />
-    </div>
+        <Loader className="animate-spin text-4xl text-gray-600" />
+      </div>
     );
   if (!isSuccess || data?.data?.length === 0) {
     return <div className="h-screen">No products available.</div>;
@@ -39,7 +41,6 @@ const ProductsPage = () => {
 
   const products: Product[] = data?.data;
 
-  // Fix type for acc and item in reduce
   const uniqueCategories: Category[] = products.reduce<Category[]>(
     (acc, product) => {
       if (!acc.some((item) => item.category === product.category)) {
@@ -53,7 +54,6 @@ const ProductsPage = () => {
     []
   );
 
-  // Filter and sort products with explicit typing for product
   const filteredProducts = products
     ?.filter(
       (product: Product) =>
@@ -74,6 +74,28 @@ const ProductsPage = () => {
         ? b.price - a.price
         : 0
     );
+
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -121,22 +143,23 @@ const ProductsPage = () => {
             onChange={(e) => setSortOrder(e.target.value)}
             className="border border-gray-300 p-2 rounded-md"
           >
-            <option value="">Sort By</option>
-            <option value="asc">Price: Low to High</option>
-            <option value="desc">Price: High to Low</option>
+            <option value="">Sort By Price</option>
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
           </select>
 
           <button
             onClick={clearFilters}
-            className="bg-[#4952b2] hover:bg-[#3712c2] text-white px-4 py-2 rounded-md"
+            className="bg-[#4952b2] text-white px-4 py-2 rounded-md hover:bg-[#3712c2]"
           >
             Clear
           </button>
         </div>
       </div>
 
+      {/* Product Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredProducts.map((product: Product) => (
+        {currentProducts.map((product: Product) => (
           <div
             key={product._id}
             className="border border-gray-300 p-4 rounded-md"
@@ -167,6 +190,37 @@ const ProductsPage = () => {
             </Link>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-md ${
+            currentPage === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-[#4952b2] text-white hover:bg-[#3712c2]"
+          }`}
+        >
+          Previous
+        </button>
+
+        <div>
+          Page {currentPage} of {totalPages}
+        </div>
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-md ${
+            currentPage === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-[#4952b2] text-white hover:bg-[#3712c2]"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

@@ -310,152 +310,157 @@ const ProductManagementPage: React.FC = () => {
           onRequestClose={() => setIsModalOpen(false)}
           style={customStyles}
         >
-          <h2 className="text-xl font-semibold mb-4 text-[#4952b2]">
-            {editingProduct?._id ? "Edit Product" : "Create New Product"}
-          </h2>
-          <form
-            onSubmit={(e: FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const productData: ProductFormData = {
-                name: formData.get("name") as string,
-                description: formData.get("description") as string,
-                category: formData.get("category") as string,
-                price: formData.get("price") as string,
-                quantity: formData.get("quantity") as string,
-                image: formData.get("image") as string,
-              };
-              handleSave(productData);
-            }}
-          >
-            <div className="flex  md-4">
-              <div className="mb-4 mr-5">
-                <label htmlFor="name" className="block font-medium">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  defaultValue={editingProduct?.name}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="description" className="block font-medium">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  id="description"
-                  defaultValue={editingProduct?.description}
-                  className="w-full px-3 py-2 border rounded-md"
-                  rows={4}
-                  required
-                ></textarea>
-              </div>
-            </div>
-            <div className="flex  md-4">
-              <div className="mb-4 mr-5">
-                <label htmlFor="category" className="block font-medium">
-                  Category
-                </label>
-                <select
-                  name="category"
-                  id="category"
-                  defaultValue={editingProduct?.category}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={addNewCategory}
-                  className="mt-2 text-sm text-blue-500 hover:underline"
-                >
-                  Add new category
-                </button>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="image" className="block font-medium">
-                  Image
-                </label>
-                <input
-                  type="file"
-                  name="image"
-                  id="image"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setImage(e.target.files?.[0] || null)
-                  }
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-                <button
-                  type="button"
-                  onClick={handleImageUpload}
-                  className="mt-2 text-sm text-blue-500 hover:underline"
-                >
-                  Upload Image
-                </button>
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt="Product"
-                    className="mt-2 w-10 h-10 object-cover"
+          <div className="w-[75%] max-w-lg mx-auto p-4 sm:p-6 md:p-2 bg-white rounded-lg max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-semibold mb-4 text-[#4952b2]">
+              {editingProduct?._id ? "Edit Product" : "Create New Product"}
+            </h2>
+            <form
+              onSubmit={(e: FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const productData: ProductFormData = {
+                  name: formData.get("name") as string,
+                  description: formData.get("description") as string,
+                  category: formData.get("category") as string,
+                  price: formData.get("price") as string,
+                  quantity: formData.get("quantity") as string,
+                  image: formData.get("image") as string,
+                };
+                handleSave(productData);
+              }}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label htmlFor="name" className="block font-medium">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    defaultValue={editingProduct?.name}
+                    className="w-full px-3 py-2 border rounded-md"
+                    required
                   />
-                )}
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="description" className="block font-medium">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    id="description"
+                    defaultValue={editingProduct?.description}
+                    className="w-full px-3 py-2 border rounded-md"
+                    rows={2}
+                    required
+                  ></textarea>
+                </div>
               </div>
-            </div>
-            <div className="flex  md-4">
-              <div className="mb-4 mr-5">
-                <label htmlFor="quantity" className="block font-medium">
-                  Quantity
-                </label>
-                <input
-                  type="number"
-                  name="quantity"
-                  id="quantity"
-                  defaultValue={editingProduct?.quantity}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label htmlFor="category" className="block font-medium">
+                    Category
+                  </label>
+                  <select
+                    name="category"
+                    id="category"
+                    defaultValue={editingProduct?.category}
+                    className="w-full px-3 py-2 border rounded-md"
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={addNewCategory}
+                    className="mt-2 text-sm text-blue-500 hover:underline"
+                  >
+                    Add new category
+                  </button>
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="image" className="block font-medium">
+                    Image
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setImage(e.target.files?.[0] || null)
+                    }
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleImageUpload}
+                    className="mt-2 text-sm text-blue-500 hover:underline"
+                  >
+                    Upload Image
+                  </button>
+                  {imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt="Product"
+                      className="mt-2 w-10 h-10 object-cover"
+                    />
+                  )}
+                </div>
               </div>
-              <div className="mb-4">
-                <label htmlFor="price" className="block font-medium">
-                  Price
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  defaultValue={editingProduct?.price}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="mb-2">
+                  <label htmlFor="quantity" className="block font-medium">
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    defaultValue={editingProduct?.quantity}
+                    className="w-full px-3 py-2 border rounded-md"
+                    required
+                  />
+                </div>
+                <div className="mb-2">
+                  <label htmlFor="price" className="block font-medium">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    id="price"
+                    defaultValue={editingProduct?.price}
+                    className="w-full px-3 py-2 border rounded-md"
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="text-white px-4 py-2 rounded-md bg-[#4952b2] hover:bg-[#3712c2]"
-              >
-                {editingProduct?._id ? "Update Product" : "Create Product"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="ml-2 text-gray-600 px-4 py-2 rounded-md border hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+
+              <div className="flex justify-end mt-4">
+                <button
+                  type="submit"
+                  className="text-white px-4 py-2 rounded-md bg-[#4952b2] hover:bg-[#3712c2]"
+                >
+                  {editingProduct?._id ? "Update Product" : "Create Product"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="ml-2 text-gray-600 px-4 py-2 rounded-md border hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </Modal>
       </div>
     );

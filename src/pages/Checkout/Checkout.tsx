@@ -13,7 +13,7 @@ const CheckoutPage = () => {
     address: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const shippingCost= 0.03; // 3% sc
+  const shippingCost = 0.03; // 3% sc
   const taxRate = 0.02; // 2% tax
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -166,12 +166,14 @@ const CheckoutPage = () => {
       <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-md ml-6 mt-6 lg:mt-0">
         <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
         {cartItems.map((item) => (
-          <div key={item._id} className="flex items-center mb-4">
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-16 h-16 object-cover rounded-md mr-4"
-            />
+          <div key={item._id} className="d-flex items-center mb-4">
+            <div className="flex-1">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-16 h-16 object-cover rounded-md mr-4"
+              />
+            </div>
             <div className="flex-1">
               <h4 className="text-lg">{item.name}</h4>
               <p className="text-sm text-gray-500">

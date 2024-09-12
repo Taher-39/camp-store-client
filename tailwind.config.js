@@ -8,6 +8,9 @@ module.exports = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  options: {
+    safelist: ['img-magnifier-glass'], 
+  },
   prefix: "",
   theme: {
     container: {

@@ -66,7 +66,7 @@ Campers Shop aims to cater to outdoor enthusiasts by offering a wide range of ca
      ```
 
 ## Usage
-Visit the deployed client site: [Campers Shop](https://capm-store.vercel.com)
+Visit the deployed client site: [Campers Shop](https://camp-store.vercel.app/)
 
 - **Navigating the site**: Explore various pages like the homepage, products, cart, and more.
 - **Managing Products**: Admins can add, update, or delete products via the Product Management page.
