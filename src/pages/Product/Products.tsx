@@ -1,7 +1,23 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
-import { Loader2Icon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
+// Define types for product and category
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image?: string;
+  status: string;
+}
+
+interface Category {
+  category: string;
+  _id: string;
+}
 
 const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,42 +26,48 @@ const ProductsPage = () => {
   const [sortOrder, setSortOrder] = useState("");
 
   const { data, isLoading, isSuccess } = useGetProductsQuery(undefined);
+
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2Icon className="w-5 h-5" />
-        Loading...
-      </div>
+      <Loader className="animate-spin text-4xl text-gray-600" />
+    </div>
     );
   if (!isSuccess || data?.data?.length === 0) {
     return <div className="h-screen">No products available.</div>;
   }
-  const products = data?.data;
 
-  const uniqueCategories = products.reduce((acc, product) => {
-    if (!acc.some((item) => item.category === product.category)) {
-      acc.push({
-        category: product.category,
-        _id: product._id,
-      });
-    }
-    return acc;
-  }, []);
+  const products: Product[] = data?.data;
 
+  // Fix type for acc and item in reduce
+  const uniqueCategories: Category[] = products.reduce<Category[]>(
+    (acc, product) => {
+      if (!acc.some((item) => item.category === product.category)) {
+        acc.push({
+          category: product.category,
+          _id: product._id,
+        });
+      }
+      return acc;
+    },
+    []
+  );
+
+  // Filter and sort products with explicit typing for product
   const filteredProducts = products
     ?.filter(
-      (product: { name: string; description: string }) =>
+      (product: Product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter((product: { category: string }) =>
+    .filter((product: Product) =>
       categoryFilter ? product.category === categoryFilter : true
     )
     .filter(
-      (product: { price: number }) =>
+      (product: Product) =>
         product.price >= priceRange[0] && product.price <= priceRange[1]
     )
-    .sort((a: { price: number }, b: { price: number }) =>
+    .sort((a: Product, b: Product) =>
       sortOrder === "asc"
         ? a.price - b.price
         : sortOrder === "desc"
@@ -61,7 +83,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 min-h-screen">
+    <div className="container mx-auto py-8 min-h-screen w-[90%]">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
         <input
           type="text"
@@ -78,9 +100,9 @@ const ProductsPage = () => {
             className="border border-gray-300 p-2 rounded-md"
           >
             <option value="">All Categories</option>
-            {uniqueCategories.map((category) => (
-              <option key={category._id} value={category.category}>
-                {category.category}
+            {uniqueCategories.map((item: Category) => (
+              <option key={item._id} value={item.category}>
+                {item.category}
               </option>
             ))}
           </select>
@@ -114,45 +136,37 @@ const ProductsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredProducts.map(
-          (product: {
-            images: string | undefined;
-            name: string;
-            price: number;
-            _id: string;
-            status: string;
-          }) => (
-            <div
-              key={product._id}
-              className="border border-gray-300 p-4 rounded-md"
-            >
-              <img
-                src={product.image}
-                alt="product img"
-                className="w-full h-48 object-cover mb-4 rounded-md"
-              />
-              <h3 className="text-lg font-bold">{product.name}</h3>
-              <div className="flex justify-between">
-                <p className="text-gray-500">${product.price}</p>
-                <p
-                  className={
-                    product.status === "in-stock"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }
-                >
-                  {product.status}
-                </p>
-              </div>
-              <Link
-                to={`/products/${product._id}`}
-                className="text-blue-500 hover:text-[#3712c2] mt-2 inline-block"
+        {filteredProducts.map((product: Product) => (
+          <div
+            key={product._id}
+            className="border border-gray-300 p-4 rounded-md"
+          >
+            <img
+              src={product.image}
+              alt="product img"
+              className="w-full h-48 object-cover mb-4 rounded-md"
+            />
+            <h3 className="text-lg font-bold">{product.name}</h3>
+            <div className="flex justify-between">
+              <p className="text-gray-500">${product.price}</p>
+              <p
+                className={
+                  product.status === "in-stock"
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
               >
-                View Details
-              </Link>
+                {product.status}
+              </p>
             </div>
-          )
-        )}
+            <Link
+              to={`/products/${product._id}`}
+              className="text-blue-500 hover:text-[#3712c2] mt-2 inline-block"
+            >
+              View Details
+            </Link>
+          </div>
+        ))}
       </div>
     </div>
   );

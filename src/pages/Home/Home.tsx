@@ -6,7 +6,7 @@ import UniqueSection from "@/components/UniqueSection/UniqueSection";
 import FAQSection from "@/components/FAQSection/FAQSection";
 export default function Home() {
   return (
-    <div className="mx-auto container">
+    <div  className="container mx-auto">
       <HeroSection />
       <BestSellingSection />
       <CategoriesSection/>

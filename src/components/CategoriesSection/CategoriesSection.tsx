@@ -1,28 +1,38 @@
 import { Link } from "react-router-dom";
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
-
+import { TProduct, TCategory } from "@/types";
+import { Loader } from "lucide-react";
 
 export default function CategoriesSection() {
   const { data, isLoading, isSuccess } = useGetProductsQuery(undefined);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="animate-spin text-4xl text-gray-600" />
+      </div>
+    );
   }
-  
+
   if (!isSuccess || !data?.data?.length) {
     return <div>No products available.</div>;
   }
-  const products = data?.data;
 
-  const uniqueCategories = products.reduce((acc, product) => {
-    if (!acc.some((item) => item.category === product.category)) {
-      acc.push({
-        category: product.category,
-        image: product.image, 
-        _id: product._id,
-      });
-    }
-    return acc;
-  }, []);
+  const products: TProduct[] = data?.data;
+
+  const uniqueCategories: TCategory[] = products.reduce(
+    (acc: TCategory[], product: TProduct) => {
+      if (!acc.some((item: TCategory) => item.category === product.category)) {
+        acc.push({
+          category: product.category,
+          image: product.image,
+          _id: product._id,
+        });
+      }
+      return acc;
+    },
+    []
+  );
 
   return (
     <section className="py-12 bg-gray-50">
@@ -31,7 +41,7 @@ export default function CategoriesSection() {
           Get everything you <span style={{ color: "#4952b2" }}>need</span>
         </h2>
         <div className="overflow-x-auto flex space-x-6 py-4">
-          {uniqueCategories.map((item) => (
+          {uniqueCategories.map((item: TCategory) => (
             <Link
               key={item._id}
               to={`/category?name=${item.category}`}
@@ -39,7 +49,7 @@ export default function CategoriesSection() {
             >
               <img
                 src={item.image}
-                alt={item.category}
+                alt="category-imgs"
                 className="w-full h-36 object-cover mb-4 rounded-lg"
               />
               <h3 className="mt-2 text-center text-black font-medium">

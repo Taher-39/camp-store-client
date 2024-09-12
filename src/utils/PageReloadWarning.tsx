@@ -24,7 +24,6 @@ const PageReloadWarning = () => {
 
   return (
     <div className="page-reload-warning" style={{ display: isWarningVisible ? 'block' : 'none' }}>
-      You have items in your cart. Are you sure you want to leave?
     </div>
   );
 };

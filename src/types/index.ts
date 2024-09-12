@@ -1,10 +1,16 @@
 export type TProduct = {
-  _id?: string | null;
+  _id?: string;
   name: string;
-  description: string | null;
-  category: string | null;
-  status: string | null;
-  price: number | null;
-  quantity: number | null;
-  image: string;
+  description: string;
+  category: string;
+  status: string;
+  price: number;
+  quantity: number;
+  image?: string;
 };
+
+export type TCategory = {
+  category: string;
+  image?: string;
+  _id?: string;
+}

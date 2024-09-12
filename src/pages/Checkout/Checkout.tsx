@@ -71,8 +71,8 @@ const CheckoutPage = () => {
         if (response.success) {
           toast.success("Order placed successfully!");
           dispatch(clearCart());
+          // window.location.reload();
           navigate("/success");
-          window.location.reload();
         } else {
           throw new Error("Some products could not be updated.");
         }
@@ -86,7 +86,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 flex">
+    <div className="container mx-auto py-8 flex w-[90%]">
       {/* Checkout Form */}
       <div className="w-full lg:w-2/3">
         <h2 className="text-2xl font-bold mb-4">Checkout</h2>

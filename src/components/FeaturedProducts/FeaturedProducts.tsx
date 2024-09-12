@@ -1,5 +1,5 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
-import { Loader2Icon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface Product {
@@ -21,8 +21,7 @@ export default function FeaturedProductsSection() {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2Icon className="w-5 h-5" />
-        Loading...
+        <Loader className="animate-spin text-4xl text-gray-600" />
       </div>
     );
 

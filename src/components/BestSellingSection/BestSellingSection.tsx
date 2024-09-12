@@ -1,6 +1,6 @@
 import { useGetBestSellingProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
-import { Loader2Icon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function BestSellingSection() {
@@ -11,12 +11,16 @@ export default function BestSellingSection() {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2Icon className="w-5 h-5" />
-        Loading...
+        <Loader className="animate-spin text-4xl text-gray-600" />
       </div>
     );
 
-  if (isError) return <div>Failed to load best-selling products</div>;
+  if (isError)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Failed to load best-selling products
+      </div>
+    );
 
   return (
     <section className="py-12 bg-gray-50">

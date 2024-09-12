@@ -1,5 +1,5 @@
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
-import { Loader2Icon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 
 const IndivisualCategory = () => {
@@ -12,8 +12,7 @@ const IndivisualCategory = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2Icon className="w-5 h-5 animate-spin" />
-        Loading...
+        <Loader className="animate-spin text-4xl text-gray-600" />
       </div>
     );
   }
@@ -36,7 +35,7 @@ const IndivisualCategory = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 container mx-auto">
             {filteredProducts.map(
               (product: {
-                images: string | undefined;
+                images: string[] | undefined;
                 name: string;
                 price: number;
                 _id: string;
@@ -47,7 +46,7 @@ const IndivisualCategory = () => {
                   className="border border-gray-300 p-4 rounded-md"
                 >
                   <img
-                    src={product.image}
+                    src={product.images?.[0] || "/placeholder.jpg"}
                     alt="product img"
                     className="w-full h-48 object-cover mb-4 rounded-md"
                   />

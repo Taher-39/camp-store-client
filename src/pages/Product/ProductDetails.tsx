@@ -7,7 +7,7 @@ import {
   updateCartItemQuantity,
 } from "@/redux/features/cart/cartSlice";
 import "./ProductDetails.css";
-import { Loader2Icon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { magnify } from "@/utils/ImageMagnifier";
 import { toast } from "sonner";
 
@@ -28,9 +28,8 @@ const ProductDetailsPage = () => {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2Icon className="w-5 h-5" />
-        Loading...
-      </div>
+      <Loader className="animate-spin text-4xl text-gray-600" />
+    </div>
     );
 
   if (isError || !product) {
@@ -76,7 +75,7 @@ const ProductDetailsPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 min-h-screen">
+    <div className="container mx-auto py-8 min-h-screen w-[90%]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="img-magnifier-container relative">
           <img

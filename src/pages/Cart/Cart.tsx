@@ -26,7 +26,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 min-h-screen">
+    <div className="container mx-auto py-8 min-h-screen w-[90%]">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
 
       {cartItems.length ? (

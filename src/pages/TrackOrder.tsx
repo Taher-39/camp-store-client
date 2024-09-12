@@ -9,7 +9,7 @@ export default function TrackOrder() {
           <p className="text-lg mb-4">
             To track your order, enter your tracking number below. You'll receive updates on the status of your shipment via email.
           </p>
-          {/* You can add a tracking form or other relevant content here */}
+         
         </div>
       </main>
     </>
