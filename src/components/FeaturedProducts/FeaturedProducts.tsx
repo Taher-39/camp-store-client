@@ -23,8 +23,7 @@ interface Product {
 export default function FeaturedProductsSection() {
   const { data, isLoading, isSuccess } = useGetProductsQuery(undefined);
   const products: Product[] = data?.data || [];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [quantity, setQuantity] = useState(1);
+  const [quantity] = useState(1);
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
   if (isLoading)
