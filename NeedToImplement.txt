@@ -1,0 +1,14 @@
+10) Before submit check deploy link are work well or not
+
+optional: 
+11) .env example add into backend
+13) add wishlist logo if product has  `Out-of-Stock` based 
+12) recently watched products list into product details page 
+10) Order details page 
+11) track order features 
+12) Authentication & Authorization features
+9)  set color into config file
+3)  detail product with different color with varient with more images
+4)  category section look like screen shoot 
+5)  try paypal || stripe || amr pay implement 
+

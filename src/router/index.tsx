@@ -1,0 +1,124 @@
+import IndivisualCategory from "@/components/CategoriesSection/IndivisualCategory";
+import MainLayout from "@/components/Layouts/MainLayouts";
+import { ProtectedRoute } from "@/components/Layouts/ProtectedRoute";
+import AboutUsPage from "@/pages/AboutUs/AboutUs";
+import Login from "@/pages/Auth/Login";
+import Register from "@/pages/Auth/Register";
+import VerificationPage from "@/pages/Auth/VarificationPage";
+import CartPage from "@/pages/Cart/Cart";
+import CheckoutPage from "@/pages/Checkout/Checkout";
+import Home from "@/pages/Home/Home";
+import Orders from "@/pages/Order/Order";
+import ProductDetailsPage from "@/pages/Product/ProductDetails";
+import ProductsPage from "@/pages/Product/Products";
+import ProductManagementPage from "@/pages/ProductManagement/ProductManagement";
+import ProfilePage from "@/pages/Profile/Profile";
+import ReturnPolicy from "@/pages/ReturnPolicy";
+import NotFound from "@/pages/shared/NotFound";
+import SettingsLayout from "@/pages/shared/SettingsLayout";
+import SuccessPage from "@/pages/SuccessPage";
+import TrackOrder from "@/pages/TrackOrder";
+import Wishlist from "@/pages/Wishlist";
+import { createBrowserRouter } from "react-router-dom";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/verify",
+        element: <VerificationPage />,
+      },
+      {
+        path: "/products",
+        element: <ProductsPage />,
+      },
+      {
+        path: "/account/orders",
+        element: (
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/account/profile",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/account/settings",
+        element: (
+          <ProtectedRoute>
+            <SettingsLayout />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/account/product-management",
+        element: (
+          <ProtectedRoute>
+            <ProductManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/products/:id",
+        element: <ProductDetailsPage />,
+      },
+      {
+        path: "/category",
+        element: <IndivisualCategory />,
+      },
+      {
+        path: "/cart",
+        element: <CartPage />,
+      },
+      {
+        path: "/checkout",
+        element: <CheckoutPage />,
+      },
+      {
+        path: "/success",
+        element: <SuccessPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutUsPage />,
+      },
+      {
+        path: "/wishlist",
+        element: <Wishlist />,
+      },
+      {
+        path: "/return-policy",
+        element: <ReturnPolicy />,
+      },
+      {
+        path: "/track-order",
+        element: <TrackOrder />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+]);
+
+export default router;
