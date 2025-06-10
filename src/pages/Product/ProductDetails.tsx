@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 // import {
 //   addItemToCart,
 //   updateCartItemQuantity,
@@ -11,6 +11,11 @@ import { Loader, MessageCircleMore } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa6";
 import { magnify } from "@/utils/ImageMagnifier";
 import OrderConfirmationModal from "../Order/OrderConfirmationModal";
+import { toast } from "sonner";
+import {
+  addItemToCart,
+  updateCartItemQuantity,
+} from "@/redux/features/cart/cartSlice";
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 // import { toast } from "sonner";
 
@@ -23,11 +28,10 @@ const ProductDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError } = useGetSingleProductQuery(id);
   const product = data?.data;
-  // const dispatch = useAppDispatch();
-  // const [quantity, setQuantity] = useState(1);
-  // const cartItems = useAppSelector((state) => state.cart.items);
+  const dispatch = useAppDispatch();
+  const [quantity] = useState(1);
+  const cartItems = useAppSelector((state) => state.cart.items);
   const { user } = useAppSelector((state) => state.auth);
-
 
   useEffect(() => {
     if (product && product.image) {
@@ -50,55 +54,98 @@ const ProductDetailsPage = () => {
     );
   }
 
-
   const handleOrderClick = () => {
     if (!user) {
-      // Not logged in, redirect to login with "from"
       navigate("/login", { state: { from: location.pathname } });
       return;
     }
 
-    setIsModalOpen(true); // Show order modal
-  };
-  const handleOrderSubmit = (data: any) => {
+    // যদি কার্ট খালি থাকে তাহলে প্রোডাক্ট ডিরেক্টলি পাঠাও
+    if (cartItems.length === 0 && product) {
+      dispatch(
+        addItemToCart({
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+          weight: product.weight,
+          availableStock: product.quantity,
+          image: product.image,
+          status: product.status,
+          category: product.category,
+          description: product.description,
+        })
+      );
+    } else if (cartItems.length !== 0 && product) {
+      //cart not empty but if this product don't stay cart this time 
+      // add this then total cart show in orderConfirmationModal
+      const existingProduct = cartItems.find(
+        (item) => item._id !== product._id
+      );
+      const sameProduct = cartItems.find(
+        (item) => item._id === product._id
+      );
+      if (existingProduct && !sameProduct) {
+        dispatch(
+          addItemToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            weight: product.weight,
+            availableStock: product.quantity,
+            image: product.image,
+            status: product.status,
+            category: product.category,
+            description: product.description,
+          })
+        );
+        toast.success("Product added to cart");
+      }
+    }
 
+    setIsModalOpen(true);
+  };
+
+  const handleOrderSubmit = (data: any) => {
     console.log("🔔 অর্ডার কনফার্মড ✅", data);
     // এখানে তুমি POST করে backend-এ পাঠাতে পারো
   };
 
-  // const handleAddToCart = () => {
-  //   const existingProduct = cartItems.find((item) => item._id === product._id);
-  //   if (existingProduct) {
-  //     const newQuantity = existingProduct.quantity + quantity;
-  //     if (newQuantity > existingProduct.availableStock) {
-  //       toast.info("Cannot add more than available stock");
-  //     } else {
-  //       dispatch(
-  //         updateCartItemQuantity({ _id: product._id, quantity: newQuantity })
-  //       );
-  //       toast.success("Product quantity updated in cart");
-  //     }
-  //   } else {
-  //     if (quantity > product.quantity) {
-  //       toast.info("Cannot add more than available stock");
-  //     } else {
-  //       dispatch(
-  //         addItemToCart({
-  //           _id: product._id,
-  //           name: product.name,
-  //           price: product.price,
-  //           quantity,
-  //           availableStock: product.quantity,
-  //           image: product.image,
-  //           status: product.status,
-  //           category: product.category,
-  //           description: product.description,
-  //         })
-  //       );
-  //       toast.success("Product added to cart");
-  //     }
-  //   }
-  // };
+  const handleAddToCart = () => {
+    const existingProduct = cartItems.find((item) => item._id === product._id);
+    if (existingProduct) {
+      const newQuantity = existingProduct.quantity + quantity;
+      if (newQuantity > existingProduct.availableStock) {
+        toast.info("Cannot add more than available stock");
+      } else {
+        dispatch(
+          updateCartItemQuantity({ _id: product._id, quantity: newQuantity })
+        );
+        toast.success("Product quantity updated in cart");
+      }
+    } else {
+      if (quantity > product.quantity) {
+        toast.info("Cannot add more than available stock");
+      } else {
+        dispatch(
+          addItemToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity,
+            weight: product.weight,
+            availableStock: product.quantity,
+            image: product.image,
+            status: product.status,
+            category: product.category,
+            description: product.description,
+          })
+        );
+        toast.success("Product added to cart");
+      }
+    }
+  };
 
   return (
     <div className="container mx-auto py-8 min-h-screen w-[90%]">
@@ -112,33 +159,35 @@ const ProductDetailsPage = () => {
           />
         </div>
         <div>
-          <h2 className="text-2xl font-bold">{product.name}</h2>
-          <div className="flex mt-4">
-            <p className="text-gray-500 mx-2">
-              <span className="font-bold text-black">TK {product.price}</span>
-              {/* RegularPrice */}
-              {/* <span className="mx-2 text-gray-400">
-                <del> Tk 850.00 </del>
-              </span>
-              <span className="px-2 py-1 rounded text-white text-sm bg-[#9EA647]">
-                Save TK 100.00
-              </span> */}
+          <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <p className="text-black-600 mb-4">
+              <span className="font-bold">মূল্যঃ </span>
+              {product.price} টাকা
             </p>
-            Status:
-            <p
-              className={
-                product.quantity > 0
-                  ? "text-green-500 ml-3"
-                  : "text-red-500 ml-3"
-              }
-            >
-              {product.status}
+            <p className="text-black-600 mb-4 ">
+              <span className="font-bold">পরিমাণঃ </span>
+              {product.weight} কেজি
             </p>
           </div>
           {/* <p className="text-sm text-gray-700 my-4">{product.description}</p> */}
-          <p className="text-sm text-gray-600 my-2">
-            Category: {product.category}
-          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <p>
+              Status:
+              <span
+                className={
+                  product.quantity > 0
+                    ? "text-green-500 ml-3"
+                    : "text-red-500 ml-3"
+                }
+              >
+                {product.status}
+              </span>
+            </p>
+            <p className="text-sm text-black-600 my-2">
+              <span className="font-bold">Category:</span> {product.category}
+            </p>
+          </div>
           {/* <p className="text-sm text-gray-600 my-2">
             Stock: {product.quantity} units
           </p>  */}
@@ -182,7 +231,22 @@ const ProductDetailsPage = () => {
           </div> */}
 
           {/* Extra Order Options */}
+          <p className="text-sm text-green-600 font-medium">
+            🥭 আপনি শুধুমাত্র Mango-আম অর্ডার করলে, ডেলিভারি অপশন অনুযায়ী চার্জ
+            কমতে পারে।{" "}
+          </p>
           <div className="mt-8 space-y-4">
+            <button
+              onClick={() => handleAddToCart()}
+              disabled={quantity > product.quantity || product.quantity === 0}
+              className={`px-4 py-2 text-center rounded-md text-white w-full ${
+                quantity > product.quantity || product.quantity === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#9EA647] hover:bg-[#8d973f]"
+              }`}
+            >
+              ব্যাগে যোগ করুন
+            </button>
             <button
               onClick={handleOrderClick}
               className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700"
@@ -204,7 +268,7 @@ const ProductDetailsPage = () => {
               <Link
                 to="https://m.me/halzobd"
                 target="_blank"
-                className="flex items-center gap-2 bg-[#0084FF] text-white px-4 py-2 rounded hover:bg-[#006edc]"
+                className="w-full flex items-center gap-2 bg-[#0084FF] text-white px-4 py-2 rounded hover:bg-[#006edc]"
               >
                 <MessageCircleMore />
                 Chat with us
@@ -213,7 +277,7 @@ const ProductDetailsPage = () => {
               <Link
                 to="https://wa.me/8801516559515"
                 target="_blank"
-                className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                className="w-full flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               >
                 <FaWhatsapp />
                 WhatsApp Us

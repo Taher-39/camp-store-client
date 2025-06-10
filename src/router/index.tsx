@@ -7,8 +7,11 @@ import Register from "@/pages/Auth/Register";
 import VerificationPage from "@/pages/Auth/VarificationPage";
 import CartPage from "@/pages/Cart/Cart";
 import CheckoutPage from "@/pages/Checkout/Checkout";
+import ContactUs from "@/pages/ContactUs";
+import CouponManagement from "@/pages/CouponManagement/CouponManagement";
 import Home from "@/pages/Home/Home";
 import Orders from "@/pages/Order/Order";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import ProductDetailsPage from "@/pages/Product/ProductDetails";
 import ProductsPage from "@/pages/Product/Products";
 import ProductManagementPage from "@/pages/ProductManagement/ProductManagement";
@@ -78,6 +81,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/account/coupon-management",
+        element: (
+          <ProtectedRoute>
+            <CouponManagement />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/products/:id",
         element: <ProductDetailsPage />,
       },
@@ -100,6 +111,14 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutUsPage />,
+      },
+      {
+        path: "/contact",
+        element: <ContactUs />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "/wishlist",

@@ -6,6 +6,7 @@ export type TProduct = {
   status: string;
   price: number;
   quantity: number;
+  weight: number;
   image?: string;
 };
 
@@ -47,4 +48,47 @@ export interface IUser {
   addresses?: IAddress[];
   lastLogin?: string;
   isDeleted: boolean;
+}
+
+export interface ICoupon {
+  _id?: string;
+  code: string;
+  discountPercentage: number;
+  expiresAt?: Date | null;
+  isActive: boolean;
+}
+
+export type OrderStatus =
+  | 'pending'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded'
+  | 'failed';
+
+export interface IOrderItem {
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
+export interface IShippingAddress {
+  phone: string;
+  address: string;
+  city: string;
+  postalCode?: string;
+}
+
+export interface IOrder {
+  _id?: string;
+  userId?: string;
+  orderItems: IOrderItem[];
+  totalPrice: number;
+  shippingAddress: IShippingAddress;
+  paymentMethod: string;
+  orderStatus?: OrderStatus;
+  couponCodeUsed?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -38,6 +38,7 @@ export default function Navbar() {
     id: string;
   } | null>(null);
   const [isHoveringCart, setIsHoveringCart] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
@@ -169,20 +170,39 @@ export default function Navbar() {
           </Link>
         </div>
         <nav className="flex items-center gap-4">
-          <button
-            onClick={() => navigate("/products")}
-            className="text-black hover:underline"
-          >
-            Products
-          </button>
           {user?.role &&
             ["super_admin", "admin", "modaretor"].includes(user.role) && (
-              <button
-                onClick={() => navigate("/account/product-management")}
-                className="text-black hover:underline"
-              >
-                Management
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="text-black hover:underline"
+                >
+                  Management
+                </button>
+
+                {showMenu && (
+                  <div className="absolute bg-white shadow-md mt-1 rounded border w-48 z-10">
+                    <button
+                      onClick={() => {
+                        navigate("/account/product-management");
+                        setShowMenu(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Product Management
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/account/coupon-management");
+                        setShowMenu(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Coupon Management
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           <button
             onClick={() => navigate("/account/orders")}

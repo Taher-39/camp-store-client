@@ -8,37 +8,39 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8 container">
+    <footer className="bg-gray-800 text-white py-8 container mt-10">
       <div className="container mx-auto flex flex-col md:flex-row justify-between">
+        {/* যোগাযোগ */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-          <p className="mb-2">123 Campers Lane</p>
-          <p className="mb-2">Campville, CA 90210</p>
+          <h3 className="text-xl font-bold mb-4">যোগাযোগ করুন</h3>
+          <p className="mb-2">হায়াত মোড়</p>
+          <p className="mb-2">চাঁপাইনবাবগঞ্জ, রাজশাহী</p>
           <p className="mb-2">
-            Email:{" "}
+            ইমেইল:{" "}
             <a
-              href="mailto:support@campersshop.com"
+              href="mailto:taherpust@gmail.com"
               className="text-gray-400 hover:text-gray-300"
             >
-              support@campersshop.com
+              taherpust@gmail.com
             </a>
           </p>
           <p>
-            Phone:{" "}
+            ফোন:{" "}
             <a
-              href="tel:+1234567890"
+              href="tel:+8801516559515"
               className="text-gray-400 hover:text-gray-300"
             >
-              +1 (234) 567-890
+              +8801516559515
             </a>
           </p>
         </div>
 
+        {/* সামাজিক যোগাযোগ মাধ্যম */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-xl font-bold mb-4">Follow Us</h3>
+          <h3 className="text-xl font-bold mb-4">আমাদের সাথে থাকুন</h3>
           <div className="flex space-x-4">
             <a
-              href="https://facebook.com"
+              href="https://facebook.com/halzobd"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-300"
@@ -46,7 +48,7 @@ const Footer = () => {
               <FacebookIcon className="w-6 h-6" />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://twitter.com/halzobd"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-300"
@@ -54,7 +56,7 @@ const Footer = () => {
               <TwitterIcon className="w-6 h-6" />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/halzobd"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-300"
@@ -62,7 +64,7 @@ const Footer = () => {
               <InstagramIcon className="w-6 h-6" />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/halzobd"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-300"
@@ -72,34 +74,23 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* দ্রুত লিংকসমূহ */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+          <h3 className="text-xl font-bold mb-4">দ্রুত লিংক</h3>
           <ul>
             <li className="mb-2">
-              <Link
-                to="/product-management"
-                className="text-gray-400 hover:text-gray-300"
-              >
-                Management
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link
-                to="/products"
-                className="text-gray-400 hover:text-gray-300"
-              >
-                Products
+              <Link to="/login" className="text-gray-400 hover:text-gray-300">
+                লগইন
               </Link>
             </li>
             <li className="mb-2">
               <Link to="/about" className="text-gray-400 hover:text-gray-300">
-                About Us
+                আমাদের সম্পর্কে
               </Link>
             </li>
-
             <li className="mb-2">
               <Link to="/contact" className="text-gray-400 hover:text-gray-300">
-                Contact
+                যোগাযোগ
               </Link>
             </li>
             <li>
@@ -107,16 +98,17 @@ const Footer = () => {
                 to="/privacy-policy"
                 className="text-gray-400 hover:text-gray-300"
               >
-                Privacy Policy
+                প্রাইভেসি পলিসি
               </Link>
             </li>
           </ul>
         </div>
       </div>
 
+      {/* নিচের অংশ */}
       <div className="bg-gray-900 py-4">
         <div className="mx-auto text-center text-gray-400">
-          <p>&copy; 2024 Campers Shop. All rights reserved.</p>
+          <p>&copy; ২০২৫ হালাল জোন - সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>

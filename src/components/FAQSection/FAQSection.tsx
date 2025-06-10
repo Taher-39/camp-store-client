@@ -3,29 +3,29 @@ import { ChevronUpIcon } from "lucide-react";
 
 const faqs = [
   {
-    question: "What is Campers Shop?",
+    question: "হালাল জোন কী?",
     answer:
-      "Campers Shop is your one-stop destination for all camping essentials, offering a wide range of products from tents to cookware.",
+      "হালাল জোন হলো একটি অনলাইন মার্কেটপ্লেস, যেখানে আপনি নিশ্চিত হালাল এবং বিশ্বাসযোগ্য ইসলামিক পণ্য পাবেন।",
   },
   {
-    question: "What are the shipping options?",
+    question: "পণ্য ডেলিভারি কতদিনে হয়?",
     answer:
-      "We offer standard, express, and overnight shipping options. You can choose your preferred method during checkout.",
+      "আমরা সাধারণত ২-৫ কার্যদিবসের মধ্যে পণ্য ডেলিভারি করি। আপনার লোকেশন অনুযায়ী সময় পরিবর্তিত হতে পারে।",
   },
   {
-    question: "Can I return or exchange my purchase?",
+    question: "আমি কি পণ্য ফেরত দিতে পারি?",
     answer:
-      "Yes, we offer a 30-day return and exchange policy on most items. Please check our <a href='/return-policy' class='text-blue-500 underline'>return policy</a> page for more details.",
+      "হ্যাঁ, আপনি পণ্য গ্রহণের ৭ দিনের মধ্যে ফেরত দিতে পারেন। বিস্তারিত জানতে আমাদের <a href='/return-policy' class='text-blue-500 underline'>রিটার্ন পলিসি</a> দেখুন।",
   },
   {
-    question: "Do you offer international shipping?",
+    question: "আপনারা কি আন্তর্জাতিকভাবে ডেলিভারি দেন?",
     answer:
-      "Currently, we only ship within the United States. However, we are working on expanding our services internationally.",
+      "বর্তমানে আমরা শুধু বাংলাদেশে পণ্য ডেলিভারি করি। ইনশাআল্লাহ ভবিষ্যতে আন্তর্জাতিক ডেলিভারির ব্যবস্থা থাকবে।",
   },
   {
-    question: "How can I track my order?",
+    question: "আমি কিভাবে অর্ডার ট্র্যাক করব?",
     answer:
-      "Once your order is shipped, you'll receive a tracking number via email. You can use this number to <a href='/track-order' class='text-blue-500 underline'>track your order</a> on our website.",
+      "অর্ডার শিপমেন্ট হলে আপনার ইমেইলে একটি ট্র্যাকিং নম্বর পাঠানো হবে। আপনি <a href='/track-order' class='text-blue-500 underline'>এখানে</a> ক্লিক করে অর্ডার ট্র্যাক করতে পারবেন।",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function FAQSection() {
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">
-          FAQ
+          প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী
         </h2>
         <div className="w-full max-w-5xl p-2 mx-auto bg-white rounded-2xl">
           {faqs.map((faq, index) => (

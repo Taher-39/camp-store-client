@@ -33,6 +33,7 @@ interface ProductFormData {
   category: string;
   price: string;
   quantity: string;
+  weight: string;
   image: string;
 }
 
@@ -106,6 +107,7 @@ const ProductManagementPage: React.FC = () => {
       category: "",
       price: 0,
       quantity: 0,
+      weight: 0,
       status: "out-of-stock",
       image: "",
     });
@@ -123,6 +125,7 @@ const ProductManagementPage: React.FC = () => {
       category: productData.category,
       price: Number(productData.price),
       quantity: Number(productData.quantity),
+      weight: Number(productData.weight),
       status: Number(productData.quantity) > 0 ? "in-stock" : "out-of-stock",
       image: imageUrl || editingProduct.image,
     };
@@ -233,7 +236,7 @@ const ProductManagementPage: React.FC = () => {
             <tr>
               <th className="w-1/4 px-4 py-2">Image</th>
               <th className="w-1/4 px-4 py-2">Name</th>
-              <th className="w-1/4 px-4 py-2">Price</th>
+              <th className="w-1/4 px-4 py-2">Price/Kg</th>
               <th className="w-1/4 px-4 py-2">Category</th>
               <th className="w-1/4 px-4 py-2">Actions</th>
             </tr>
@@ -250,7 +253,7 @@ const ProductManagementPage: React.FC = () => {
                 </td>
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">
-                  ${product.price.toFixed(2)}
+                  💵 {product.price.toFixed(2)}
                 </td>
                 <td className="border px-4 py-2">{product.category}</td>
                 <td className="border px-4 py-2 relative">
@@ -353,6 +356,7 @@ const ProductManagementPage: React.FC = () => {
                   category: formData.get("category") as string,
                   price: formData.get("price") as string,
                   quantity: formData.get("quantity") as string,
+                  weight: formData.get("weight") as string,
                   image: formData.get("image") as string,
                 };
                 handleSave(productData);
@@ -454,6 +458,19 @@ const ProductManagementPage: React.FC = () => {
                     name="quantity"
                     id="quantity"
                     defaultValue={editingProduct?.quantity}
+                    className="w-full px-3 py-2 border rounded-md"
+                    required
+                  />
+                </div>
+                <div className="mb-2">
+                  <label htmlFor="weight" className="block font-medium">
+                    Weight
+                  </label>
+                  <input
+                    type="number"
+                    name="weight"
+                    id="weight"
+                    defaultValue={editingProduct?.weight}
                     className="w-full px-3 py-2 border rounded-md"
                     required
                   />

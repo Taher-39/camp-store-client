@@ -17,6 +17,7 @@ interface Product {
   description: string;
   category: string;
   quantity: number;
+  weight: number;
   status: string;
 }
 
@@ -59,6 +60,7 @@ export default function FeaturedProductsSection() {
             name: product.name,
             price: product.price,
             quantity,
+            weight: product.weight,
             availableStock: product.quantity,
             image: product.image,
             status: product.status,
@@ -70,12 +72,11 @@ export default function FeaturedProductsSection() {
       }
     }
   };
-
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto">
         <h2 className="text-2xl font-bold text-center mb-8">
-          <span style={{ color: "#4952b2" }}>Our</span> Products
+          <span style={{ color: "#9EA647" }}>আমাদের </span>প্রোডাক্ট সমূহ
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product: Product) => (
@@ -91,7 +92,14 @@ export default function FeaturedProductsSection() {
               <h3 className="text-lg font-medium text-gray-800 mb-2">
                 {product.name}
               </h3>
-              <p className="text-gray-600 mb-4">TK {product.price}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <p className="text-gray-600 mb-4">
+                   <span className="font-bold">মূল্যঃ </span>{product.price} টাকা 
+                </p>
+                <p className="text-gray-600 mb-4 ">
+                  <span className="font-bold">পরিমাণঃ </span>{product.weight} কেজি
+                </p>
+              </div>
               {/* <div>
                 <Link
                   to={`/products/${product._id}`}
@@ -116,7 +124,7 @@ export default function FeaturedProductsSection() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-4">
                 <Link
                   to={`/products/${product._id}`}
-                  className="px-4 py-3 text-center text-white bg-[#4952b2] hover:bg-[#3712c2] font-semibold rounded-md"
+                  className="px-4 py-2 text-center text-white bg-[#9EA647] hover:bg-[#8d973f] rounded-md"
                 >
                   বিস্তারিত
                 </Link>
@@ -125,10 +133,10 @@ export default function FeaturedProductsSection() {
                   disabled={
                     quantity > product.quantity || product.quantity === 0
                   }
-                  className={`px-4 py-3 text-center rounded-md text-white ${
+                  className={`px-4 py-2 text-center rounded-md text-white ${
                     quantity > product.quantity || product.quantity === 0
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#4952b2] hover:bg-[#3712c2]"
+                      : "bg-[#9EA647] hover:bg-[#8d973f]"
                   }`}
                 >
                   ব্যাগে যোগ করুন

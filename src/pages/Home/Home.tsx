@@ -4,6 +4,7 @@
 import FeaturedProductsSection from "@/components/FeaturedProducts/FeaturedProducts";
 // import UniqueSection from "@/components/UniqueSection/UniqueSection";
 import FAQSection from "@/components/FAQSection/FAQSection";
+import Features from "../Features/Features";
 export default function Home() {
   return (
     <div  className="container mx-auto">
@@ -12,6 +13,7 @@ export default function Home() {
       <CategoriesSection/> */}
       <FeaturedProductsSection />
       {/* <UniqueSection /> */}
+      <Features/>
       <FAQSection />
     </div>
   );

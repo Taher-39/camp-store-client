@@ -6,6 +6,7 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number; // Quantity in the cart
+  weight: number; // Quantity in the cart
   availableStock: number; // Available stock from the product
   image: string;
   status: string;

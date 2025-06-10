@@ -12,9 +12,8 @@ const CheckoutPage = () => {
     phone: "",
     address: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState("cod");
-  const shippingCost = 0.00; // 0% sc
-  const taxRate = 0.00; // 0% tax
+  const [paymentMethod, setPaymentMethod] = useState("online-payment");
+  const shippingCost = 0.0; // 0% sc
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const cartItems = useAppSelector((state) => state.cart.items);
@@ -33,16 +32,12 @@ const CheckoutPage = () => {
       0
     );
   };
-
-  const calculateTax = () => {
-    return calculateSubtotal() * taxRate;
-  };
   const calculateShippingCost = () => {
     return calculateSubtotal() * shippingCost;
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax() + shippingCost;
+    return calculateSubtotal() + shippingCost;
   };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -148,52 +143,53 @@ const CheckoutPage = () => {
               className="w-full px-4 py-2 border rounded-md"
               required
             >
+              <option value="online-payment">Online Payment</option>
               <option value="cod">Cash on Delivery</option>
-              <option value="stripe">Stripe</option>
             </select>
           </div>
 
           <button
             type="submit"
-            className="px-6 py-2 bg-[#4952b2] hover:bg-[#3712c2] text-white rounded-md"
+            className="px-6 py-2 text-white bg-[#9EA647] hover:bg-[#8d973f] rounded-md"
           >
-            Place Order
+            অন লাইন পেমেন্ট
           </button>
         </form>
       </div>
 
       {/* Cart Summary */}
       <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-md ml-6 mt-6 lg:mt-0">
-        <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-        {cartItems.map((item) => (
-          <div key={item._id} className="d-flex items-center mb-4">
-            <div className="flex-1">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-16 h-16 object-cover rounded-md mr-4"
-              />
-            </div>
-            <div className="flex-1">
-              <h4 className="text-lg">{item.name}</h4>
-              <p className="text-sm text-gray-500">
-                {item.quantity} x TK {item.price.toFixed(2)}
-              </p>
-            </div>
+        <div className="mb-3 border-b-2 py-4">
+          <h3 className="text-md font-semibold mb-2">অর্ডার সারাংশ</h3>
+          <div className="max-h-40 overflow-y-auto space-y-2">
+            {cartItems.map((item) => (
+              <div key={item._id} className="flex items-center space-x-3">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  width={50}
+                  height={50}
+                  className="rounded border"
+                />
+                <div>
+                  <p className="text-sm font-medium">{item.name}</p>
+                  <p className="text-xs text-gray-600">
+                    Qty: {item.quantity} × Tk {item.price}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
         <div className="mt-4">
           <p className="text-sm text-gray-500">
-            Subtotal: TK {calculateSubtotal().toFixed(2)}
+            পণ্যের দাম: {calculateSubtotal().toFixed(2)} টাকা
           </p>
           <p className="text-sm text-gray-500">
-            Tax (0%): TK {calculateTax().toFixed(2)}
-          </p>
-          <p className="text-sm text-gray-500">
-            Shipping: TK {calculateShippingCost().toFixed(2)}
+            ডেলিভারি চার্জ: {calculateShippingCost().toFixed(2)} টাকা
           </p>
           <p className="text-lg font-semibold mt-2">
-            Total: TK {calculateTotal().toFixed(2)}
+            সর্বমোট: {calculateTotal().toFixed(2)} টাকা
           </p>
         </div>
       </div>

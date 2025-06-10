@@ -4,9 +4,14 @@ import {
   removeItemFromCart,
 } from "@/redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import DeleteConfirmationModal from "@/utils/DeleteConfirmation";
+import { useState } from "react";
 
 const CartPage = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{
+      id: string;
+    } | null>(null);
   const dispatch = useAppDispatch();
 
   const handleQuantityChange = (_id: string, newQuantity: number) => {
@@ -14,14 +19,13 @@ const CartPage = () => {
   };
 
   const handleRemoveItem = (_id: string) => {
-    if (window.confirm("Are you sure you want to remove this item?")) {
       dispatch(removeItemFromCart(_id));
-    }
+    
   };
 
   const calculateTotalPrice = () => {
     return cartItems
-      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .reduce((total, item) => total + item.price  * item.quantity, 0)
       .toFixed(2);
   };
 
@@ -42,12 +46,14 @@ const CartPage = () => {
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p className="text-sm text-gray-500 mb-1">
-                    Category: {item.category}
+                    ক্যাটাগরি: {item.category}
                   </p>
                   <p className="text-sm text-gray-500 mb-1">
-                    Status: {item.status}
+                    ওজন: {item.weight} কেজি
                   </p>
-                  <p className="text-sm text-gray-500 mb-1">TK {item.price}</p>
+                  <p className="text-sm text-gray-500 mb-1">
+                    মোট মূল্য: {item.price} টাকা 
+                  </p>
                   <div className="flex items-center mt-2">
                     <button
                       onClick={() =>
@@ -70,11 +76,23 @@ const CartPage = () => {
                     </button>
                   </div>
                   <button
-                    onClick={() => handleRemoveItem(item._id)}
+                    onClick={() => setShowDeleteConfirm({ id: item._id })}
                     className="text-red-500 hover:text-red-700 mt-4 block"
                   >
-                    Remove
+                    বাদ দিন
                   </button>
+                  <DeleteConfirmationModal
+                    isOpen={showDeleteConfirm !== null}
+                    onClose={() => setShowDeleteConfirm(null)}
+                    onConfirm={() => {
+                      if (showDeleteConfirm?.id) {
+                        handleRemoveItem(showDeleteConfirm.id);
+                      }
+                      setShowDeleteConfirm(null);
+                    }}
+                    title="আপনি কি নিশ্চিত?"
+                    message="আপনি কি এই পণ্যটি কার্ট থেকে বাদ দিতে চান?"
+                  />
                 </div>
               </li>
             ))}
@@ -82,7 +100,7 @@ const CartPage = () => {
 
           <div className="mt-6 p-4 border-t border-gray-300">
             <h3 className="text-xl font-semibold">
-              Total: TK {calculateTotalPrice()}
+              মোট: {calculateTotalPrice()} টাকা
             </h3>
             <div className="mt-4">
               <Link
@@ -92,7 +110,7 @@ const CartPage = () => {
                     (item) => item.quantity < 1 || item.availableStock === 0
                   )
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#4952b2] hover:bg-[#3712c2]"
+                    : "bg-[#9EA647] hover:bg-[#8d973f]"
                 }`}
                 onClick={(e) => {
                   if (
@@ -104,7 +122,7 @@ const CartPage = () => {
                   }
                 }}
               >
-                Place Order
+                অর্ডার করুন
               </Link>
             </div>
           </div>
