@@ -71,6 +71,8 @@ export interface IOrderItem {
   productId: string;
   quantity: number;
   price: number;
+  image: string;
+  name: string;
 }
 
 export interface IShippingAddress {
@@ -84,11 +86,16 @@ export interface IOrder {
   _id?: string;
   userId?: string;
   orderItems: IOrderItem[];
-  totalPrice: number;
+  name: string;
   shippingAddress: IShippingAddress;
+  couponCodeUsed?: string;
+  note?: string;
+  subtotal: number;
+  shipping?: string;
+  shippingCost: number;
+  totalPrice: number;
   paymentMethod: string;
   orderStatus?: OrderStatus;
-  couponCodeUsed?: string;
   createdAt?: string;
   updatedAt?: string;
 }

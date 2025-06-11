@@ -35,7 +35,7 @@ export default function FeaturedProductsSection() {
     );
 
   if (!isSuccess || products.length === 0) {
-    return <div>No products available.</div>;
+    return <div className="text-center text-lg font-bold my-10">No products available.</div>;
   }
 
   const handleAddToCart = (product: Product) => {
