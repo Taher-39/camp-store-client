@@ -99,3 +99,39 @@ export interface IOrder {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface IUserRef {
+  _id: string;
+  name: string;
+  avatar?: string;
+}
+
+export interface IProductRef {
+  _id: string;
+  name: string;
+}
+
+export interface IReview {
+  _id: string;
+  productId: string | IProductRef;
+  userId: string | IUserRef;
+  rating: number;
+  comment: string;
+  images?: string[];
+  isVerified?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IReviewInput {
+  productId: string;
+  rating: number;
+  comment: string;
+  images?: string[];
+}
+
+export interface IReviewApiResponse {
+  success: boolean;
+  message: string;
+  data: IReview | IReview[];
+}

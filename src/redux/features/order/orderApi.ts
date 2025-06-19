@@ -23,8 +23,15 @@ const orderApi = baseApi.injectEndpoints({
       })
     }),
 
+    // READ (Get Orders by userId)
+    getSingleUserOrders: builder.query<{ data: IOrder[] }, void>({
+      query: () => ({
+        url: '/orders/single-user-orders',
+        method: 'GET',
+      })
+    }),
     // READ (Get a Specific Order by ID)
-    getOrder: builder.query<{ data: IOrder }, string>({
+    getSingleOrderById: builder.query<{ data: IOrder }, string>({
       query: (id) => ({
         url: `/orders/${id}`,
         method: 'GET',
@@ -52,8 +59,9 @@ const orderApi = baseApi.injectEndpoints({
 
 export const {
   useCreateOrderMutation,
+  useGetSingleUserOrdersQuery,
   useGetOrdersQuery,
-  useGetOrderQuery,
+  useGetSingleOrderByIdQuery,
   useUpdateOrderMutation,
   useDeleteOrderMutation,
 } = orderApi;

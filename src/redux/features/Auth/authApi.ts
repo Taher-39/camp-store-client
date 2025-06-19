@@ -17,12 +17,12 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
     resendCode: builder.mutation({
-  query: (data) => ({
-    url: "/auth/resend-code",
-    method: "POST",
-    body: data,
-  }),
-}),
+      query: (data) => ({
+        url: "/auth/resend-code",
+        method: "POST",
+        body: data,
+      }),
+    }),
 
     login: builder.mutation({
       query: (userInfo) => {
@@ -44,8 +44,8 @@ const authApi = baseApi.injectEndpoints({
     }),
     updateProfile: builder.mutation({
       query: (data) => ({
-        url: '/user/me', 
-        method: 'PUT',
+        url: "/user/me",
+        method: "PUT",
         body: data,
       }),
     }),
@@ -53,6 +53,13 @@ const authApi = baseApi.injectEndpoints({
       query: (email: string) => ({
         url: `/user/email/${email}`,
         method: "GET",
+      }),
+    }),
+    submitContact: builder.mutation({
+      query: (contactData) => ({
+        url: "/user/contact",
+        method: "POST",
+        body: contactData,
       }),
     }),
   }),
@@ -65,5 +72,6 @@ export const {
   useLoginMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,
-  useGetUserByEmailQuery
+  useGetUserByEmailQuery,
+  useSubmitContactMutation 
 } = authApi;
