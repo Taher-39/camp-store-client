@@ -8,8 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 // import sliderImage1 from "@/assets/mango/3.jpg";
-// import sliderImage2 from "@/assets/mango/4.jpg";
-import sliderImage3 from "@/assets/mango/6.jpg";
+import sliderImage2 from "@/assets/tree.jpg";
+import sliderImage3 from "@/assets/cp.png";
 
 export function HeroSection() {
   const sliderData = [
@@ -17,10 +17,10 @@ export function HeroSection() {
       id: 1,
       image: sliderImage3,
     },
-    // {
-    //   id: 2,
-    //   image: sliderImage2,
-    // },
+    {
+      id: 2,
+      image: sliderImage2,
+    },
     // {
     //   id: 3,
     //   image: sliderImage3,

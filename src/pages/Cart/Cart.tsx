@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   updateCartItemQuantity,
   removeItemFromCart,
@@ -6,12 +6,17 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import DeleteConfirmationModal from "@/utils/DeleteConfirmation";
 import { useState } from "react";
+import OrderConfirmationModal from "../Order/OrderConfirmationModal";
+import { useCurrentUser } from "@/redux/features/Auth/authSlice";
 
 const CartPage = () => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const cartItems = useAppSelector((state) => state.cart.items);
+  const authUser = useAppSelector(useCurrentUser);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{
-      id: string;
-    } | null>(null);
+    id: string;
+  } | null>(null);
   const dispatch = useAppDispatch();
 
   const handleQuantityChange = (_id: string, newQuantity: number) => {
@@ -19,14 +24,24 @@ const CartPage = () => {
   };
 
   const handleRemoveItem = (_id: string) => {
-      dispatch(removeItemFromCart(_id));
-    
+    dispatch(removeItemFromCart(_id));
   };
 
   const calculateTotalPrice = () => {
     return cartItems
-      .reduce((total, item) => total + item.price  * item.quantity, 0)
+      .reduce((total, item) => total + item.price * item.quantity, 0)
       .toFixed(2);
+  };
+  const isOrderDisabled = cartItems.some(
+    (item) => item.quantity < 1 || item.availableStock === 0
+  );
+  const handleOrderClick = () => {
+    if (!authUser) {
+      navigate("/login", { state: { from: location.pathname } });
+      return;
+    }
+
+    setIsModalOpen(true);
   };
 
   return (
@@ -52,7 +67,7 @@ const CartPage = () => {
                     ওজন: {item.weight} কেজি
                   </p>
                   <p className="text-sm text-gray-500 mb-1">
-                    মোট মূল্য: {item.price} টাকা 
+                    মোট মূল্য: {item.price} টাকা
                   </p>
                   <div className="flex items-center mt-2">
                     <button
@@ -103,29 +118,23 @@ const CartPage = () => {
               মোট: {calculateTotalPrice()} টাকা
             </h3>
             <div className="mt-4">
-              <Link
-                to="/checkout"
+              <button
                 className={`mt-4 px-4 py-2 rounded-md text-white ${
-                  cartItems.some(
-                    (item) => item.quantity < 1 || item.availableStock === 0
-                  )
+                  isOrderDisabled
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-[#9EA647] hover:bg-[#8d973f]"
                 }`}
-                onClick={(e) => {
-                  if (
-                    cartItems.some(
-                      (item) => item.quantity < 1 || item.availableStock === 0
-                    )
-                  ) {
-                    e.preventDefault();
-                  }
-                }}
+                onClick={isOrderDisabled ? undefined : handleOrderClick}
+                disabled={isOrderDisabled}
               >
                 অর্ডার করুন
-              </Link>
+              </button>
             </div>
           </div>
+          <OrderConfirmationModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
         </div>
       ) : (
         <p>Your cart is empty</p>

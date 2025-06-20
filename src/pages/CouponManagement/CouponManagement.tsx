@@ -9,6 +9,26 @@ import {
   useUpdateCouponMutation,
 } from "@/redux/features/coupon/couponApi";
 import DeleteConfirmationModal from "@/utils/DeleteConfirmation";
+import Sidebar from "@/components/Sidebar/Sidebar";
+
+const CouponManagementLayout = () => {
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Desktop Sidebar (always visible on desktop) */}
+      <div className="hidden w-64 border-r bg-white shadow-md sm:block">
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <CouponManagement />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 const initialCouponState: Partial<ICoupon> = {
   code: "",
@@ -127,7 +147,7 @@ const CouponManagement = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className=" px-4 py-2 rounded text-white bg-[#9EA647] hover:bg-[#8d973f]"
         >
           {isEditing ? "Update Coupon" : "Create Coupon"}
         </button>
@@ -192,4 +212,4 @@ const CouponManagement = () => {
   );
 };
 
-export default CouponManagement;
+export default CouponManagementLayout;

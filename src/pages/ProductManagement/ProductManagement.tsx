@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import Modal from "react-modal";
-import { PencilIcon, TrashIcon, Loader, Trash2, AlertTriangle } from "lucide-react";
+import {
+  PencilIcon,
+  TrashIcon,
+  Loader,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
@@ -11,6 +17,29 @@ import {
 } from "@/redux/features/product/productApi";
 import "./ProductManagement.css";
 import { TProduct } from "@/types";
+import { CloudinaryUploadWidget } from "@/components/Review/CloudinaryUploadWidget";
+import Sidebar from "@/components/Sidebar/Sidebar";
+
+
+const ProductManagementPage = () => {
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Desktop Sidebar (always visible on desktop) */}
+      <div className="hidden w-64 border-r bg-white shadow-md sm:block">
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <ProductManagementPageLayout />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 
 // Initialize Modal
 Modal.setAppElement("#root");
@@ -37,7 +66,7 @@ interface ProductFormData {
   image: string;
 }
 
-const ProductManagementPage: React.FC = () => {
+const ProductManagementPageLayout: React.FC = () => {
   const { data, isLoading, isSuccess, refetch, isError } =
     useGetProductsQuery(undefined);
   const products: TProduct[] = data?.data || [];
@@ -47,15 +76,17 @@ const ProductManagementPage: React.FC = () => {
   const [deleteProduct] = useDeleteProductMutation();
 
   const [editingProduct, setEditingProduct] = useState<TProduct | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string } | null>(
+    null
+  );
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([
     "Mango-আম",
-    "Ata-আটা"
+    "Ata-আটা",
   ]);
 
   const customStyles: Modal.Styles = {
@@ -77,7 +108,9 @@ const ProductManagementPage: React.FC = () => {
     if (!deleteConfirm?.id) return;
     setIsDeleting(true);
     try {
-      const res = (await deleteProduct(deleteConfirm.id).unwrap()) as ApiResponse<null>;
+      const res = (await deleteProduct(
+        deleteConfirm.id
+      ).unwrap()) as ApiResponse<null>;
       if (res.success) {
         toast.success(res.message);
         refetch();
@@ -153,38 +186,11 @@ const ProductManagementPage: React.FC = () => {
     }
   };
 
-  // Handle Image Upload
-  const handleImageUpload = async () => {
-    if (!image) {
-      toast.error("Please upload an image.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", "CampStore");
-    formData.append("cloud_name", "do0ujomfx");
-
-    try {
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/do0ujomfx/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const cloudData = await res.json();
-      if (cloudData.url) {
-        setImageUrl(cloudData.url);
-        toast.success("Image uploaded successfully.");
-      } else {
-        toast.error("Image upload failed.");
-      }
-    } catch (error) {
-      toast.error("Error uploading image.");
-    }
+  const handleImageUpload = (url: string) => {
+    setImageUrl(url);
+    toast.success("Image uploaded successfully.");
   };
+
 
   // Add New Category
   const addNewCategory = () => {
@@ -227,7 +233,7 @@ const ProductManagementPage: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4">Product Management</h2>
         <button
           onClick={handleCreate}
-          className="text-white px-4 py-2 rounded-md mb-4 bg-[#4952b2] hover:bg-[#3712c2]"
+          className="px-4 py-2 rounded-md mb-4 text-white bg-[#9EA647] hover:bg-[#8d973f]]"
         >
           Create New Product
         </button>
@@ -259,7 +265,7 @@ const ProductManagementPage: React.FC = () => {
                 <td className="border px-4 py-2 relative">
                   <button
                     onClick={() => handleEdit(product)}
-                    className="text-blue-500 hover:text-blue-700 mr-2 group relative"
+                    className="mr-2 group relative text-[#9EA647]"
                   >
                     <PencilIcon className="h-5 w-5" />
                     <span className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-0.5 hidden group-hover:inline-block bg-gray-700 text-white text-xs px-2 py-1 rounded">
@@ -288,9 +294,12 @@ const ProductManagementPage: React.FC = () => {
                       <div className="bg-white w-full max-w-md rounded-xl p-6 shadow-lg">
                         <div className="flex flex-col items-center text-center space-y-4">
                           <AlertTriangle className="w-12 h-12 text-yellow-500" />
-                          <h3 className="text-xl font-semibold">Delete Product?</h3>
+                          <h3 className="text-xl font-semibold">
+                            Delete Product?
+                          </h3>
                           <p className="text-gray-600 px-4">
-                            Are you sure you want to permanently delete this product?
+                            Are you sure you want to permanently delete this
+                            product?
                           </p>
                           <div className="flex gap-4 w-full mt-4">
                             <button
@@ -311,7 +320,8 @@ const ProductManagementPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    </div>)}
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
@@ -326,10 +336,11 @@ const ProductManagementPage: React.FC = () => {
             <button
               key={index + 1}
               onClick={() => handlePageChange(index + 1)}
-              className={`mx-1 px-3 py-1 rounded-md ${currentPage === index + 1
-                ? "bg-[#4952b2] text-white"
-                : "bg-gray-200 text-black"
-                }`}
+              className={`mx-1 px-3 py-1 rounded-md ${
+                currentPage === index + 1
+                  ? "bg-[#9EA647] text-white"
+                  : "bg-gray-200 text-black"
+              }`}
             >
               {index + 1}
             </button>
@@ -343,7 +354,7 @@ const ProductManagementPage: React.FC = () => {
           style={customStyles}
         >
           <div className="w-[75%] max-w-lg mx-auto p-4 sm:p-6 md:p-2 bg-white rounded-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-4 text-[#4952b2]">
+            <h2 className="text-xl font-semibold mb-4">
               {editingProduct?._id ? "Edit Product" : "Create New Product"}
             </h2>
             <form
@@ -413,31 +424,17 @@ const ProductManagementPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={addNewCategory}
-                    className="mt-2 text-sm text-blue-500 hover:underline"
+                    className="mt-2 text-sm text-gray-500 hover:underline"
                   >
                     Add new category
                   </button>
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="image" className="block font-medium">
-                    Image
-                  </label>
-                  <input
-                    type="file"
-                    name="image"
-                    id="image"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setImage(e.target.files?.[0] || null)
-                    }
-                    className="w-full px-3 py-2 border rounded-md"
+                <div>
+                  <p className="text-sm font-medium mb-2">Add Photo</p>
+                  <CloudinaryUploadWidget
+                    onUpload={handleImageUpload}
+                    folder="halal-zone/reviews"
                   />
-                  <button
-                    type="button"
-                    onClick={handleImageUpload}
-                    className="mt-2 text-sm text-blue-500 hover:underline"
-                  >
-                    Upload Image
-                  </button>
                   {imageUrl && (
                     <img
                       src={imageUrl}
@@ -493,7 +490,7 @@ const ProductManagementPage: React.FC = () => {
               <div className="flex justify-end mt-4">
                 <button
                   type="submit"
-                  className="text-white px-4 py-2 rounded-md bg-[#4952b2] hover:bg-[#3712c2]"
+                  className="px-4 py-2 rounded-md text-white bg-[#9EA647] hover:bg-[#8d973f]"
                 >
                   {editingProduct?._id ? "Update Product" : "Create Product"}
                 </button>

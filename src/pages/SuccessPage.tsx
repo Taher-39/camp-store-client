@@ -19,7 +19,7 @@ const SuccessPage = () => {
 
         {/* অর্ডার ইতিহাস পেজ লিংক */}
         <Link
-          to="/account/orders"
+          to="/my-orders"
           className="px-6 py-3 text-white font-semibold rounded-lg shadow bg-green-600 hover:bg-green-700 transition duration-300"
         >
           অর্ডার ইতিহাস দেখুন

@@ -49,9 +49,17 @@ const router = createBrowserRouter([
         element: <ProductsPage />,
       },
       {
-        path: "/account/orders",
+        path: "/admin/orders",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin", "super_admin", "modaretor"]}>
+            <Orders />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-orders",
+        element: (
+          <ProtectedRoute requiredRoles={["customer"]}>
             <Orders />
           </ProtectedRoute>
         ),
@@ -59,7 +67,9 @@ const router = createBrowserRouter([
       {
         path: "/account/profile",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute
+            requiredRoles={["admin", "super_admin", "modaretor", "customer"]}
+          >
             <ProfilePage />
           </ProtectedRoute>
         ),
@@ -67,23 +77,25 @@ const router = createBrowserRouter([
       {
         path: "/account/settings",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute
+            requiredRoles={["admin", "super_admin", "modaretor", "customer"]}
+          >
             <SettingsLayout />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/account/product-management",
+        path: "/admin/product-management",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin", "super_admin", "modaretor"]}>
             <ProductManagementPage />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/account/coupon-management",
+        path: "/admin/coupon-management",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin", "super_admin", "modaretor"]}>
             <CouponManagement />
           </ProtectedRoute>
         ),
@@ -130,7 +142,13 @@ const router = createBrowserRouter([
       },
       {
         path: "/track-order",
-        element: <TrackOrder />,
+        element: (
+          <ProtectedRoute
+            requiredRoles={["admin", "super_admin", "modaretor", "customer"]}
+          >
+            <TrackOrder />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "*",

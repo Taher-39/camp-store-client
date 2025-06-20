@@ -78,7 +78,7 @@ export default function FeaturedProductsSection() {
         <h2 className="text-2xl font-bold text-center mb-8">
           <span style={{ color: "#9EA647" }}>আমাদের </span>প্রোডাক্ট সমূহ
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {products.map((product: Product) => (
             <div
               key={product._id}
@@ -94,10 +94,12 @@ export default function FeaturedProductsSection() {
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <p className="text-gray-600 mb-4">
-                   <span className="font-bold">মূল্যঃ </span>{product.price} টাকা 
+                  <span className="font-bold">মূল্যঃ </span>
+                  {product.price} টাকা
                 </p>
                 <p className="text-gray-600 mb-4 ">
-                  <span className="font-bold">পরিমাণঃ </span>{product.weight} কেজি
+                  <span className="font-bold">পরিমাণঃ </span>
+                  {product.weight} কেজি
                 </p>
               </div>
               {/* <div>
@@ -133,7 +135,7 @@ export default function FeaturedProductsSection() {
                   disabled={
                     quantity > product.quantity || product.quantity === 0
                   }
-                  className={`px-4 py-2 text-center rounded-md text-white ${
+                  className={`px-2 py-1 text-center rounded-md text-white ${
                     quantity > product.quantity || product.quantity === 0
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-[#9EA647] hover:bg-[#8d973f]"

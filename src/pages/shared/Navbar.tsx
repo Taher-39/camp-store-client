@@ -1,3 +1,598 @@
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, User, Menu, X, Search, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, useCurrentUser } from "@/redux/features/Auth/authSlice";
+import {
+  removeItemFromCart,
+  updateCartItemQuantity,
+} from "@/redux/features/cart/cartSlice";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import halalZoneLogo from "@/assets/logo.png";
+import halalZoneCicleLogo from "@/assets/circle_logo.png";
+import OrderConfirmationModal from "../Order/OrderConfirmationModal";
+
+export default function Navbar() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  // const location = useLocation();
+  const authUser = useAppSelector(useCurrentUser);
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  // State management
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Refs for closing dropdowns when clicking outside
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+  const cartRef = useRef<HTMLDivElement>(null);
+
+  // Categories data
+  // const categories = [
+  //   // "Mango",
+  //   // "Mustard Oil",
+  //   // "Ghee",
+  //   // "Dates",
+  //   // "Honey",
+  //   // "Spices",
+  //   // "Nuts & Seeds",
+  //   // "Tea/Coffee",
+  //   // "Dry Fruits",
+  // ];
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: Event) => {
+      if (
+        accountMenuRef.current &&
+        !accountMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsAccountMenuOpen(false);
+      }
+
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Cart total calculation
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const cartQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  // Handle cart item quantity change
+  const handleQuantityChange = (id: string, newQuantity: number) => {
+    if (newQuantity > 0) {
+      dispatch(updateCartItemQuantity({ _id: id, quantity: newQuantity }));
+    }
+  };
+
+  const handleRemoveItem = (id: string) => {
+    dispatch(removeItemFromCart(id));
+  };
+
+  const handleOrderClick = () => {
+    if (!authUser) {
+      navigate("/login", { state: { from: location.pathname } });
+      return;
+    }
+
+    setIsModalOpen(true);
+  };
+
+  return (
+    <>
+      {/* Top Announcement Bar */}
+      {/* <div className="bg-[#9EA647] text-white text-center py-2 px-4 text-sm">
+        🚚 Free delivery on orders over 1000৳ | 📞 Call us: +8801516-559515
+      </div> */}
+
+      {/* Main Navbar */}
+      <header
+        className={`sticky top-0 z-50 bg-white shadow-sm transition-all duration-300 ${
+          isScrolled ? "py-2" : "py-3"
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          {/* Mobile Top Bar */}
+          <div className="flex items-center justify-between md:hidden">
+            <button onClick={() => setIsMenuOpen(true)} className="p-2">
+              <Menu className="w-6 h-6 text-gray-700" />
+            </button>
+
+            <Link to="/" className="flex items-center">
+              <img src={halalZoneCicleLogo} alt="Halal Zone" className="h-10" />
+            </Link>
+
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsMobileSearchOpen(true)}
+                className="p-2"
+              >
+                <Search className="w-5 h-5 text-gray-700" />
+              </button>
+              <div className="relative" ref={cartRef}>
+                <button
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  className="p-2 relative"
+                >
+                  <ShoppingCart className="w-5 h-5 text-gray-700" />
+                  {cartQuantity > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartQuantity}
+                    </span>
+                  )}
+                </button>
+
+                {/* Mobile Cart Dropdown */}
+                {isCartOpen && (
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border z-50">
+                    <div className="p-4">
+                      <div className="flex justify-between items-center border-b pb-3">
+                        <h3 className="font-medium">
+                          Your Cart ({cartQuantity})
+                        </h3>
+                        <button onClick={() => setIsCartOpen(false)}>
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      {cartItems.length === 0 ? (
+                        <div className="py-8 text-center text-gray-500">
+                          Your cart is empty
+                        </div>
+                      ) : (
+                        <>
+                          <div className="max-h-60 overflow-y-auto py-2">
+                            {cartItems.map((item) => (
+                              <div
+                                key={item._id}
+                                className="flex items-center py-3 border-b"
+                              >
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-12 h-12 object-cover rounded"
+                                />
+                                <div className="ml-3 flex-1">
+                                  <h4 className="text-sm font-medium">
+                                    {item.name}
+                                  </h4>
+                                  <div className="flex items-center mt-1">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item._id,
+                                          item.quantity - 1
+                                        )
+                                      }
+                                      className="w-6 h-6 border rounded flex items-center justify-center"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="mx-2">
+                                      {item.quantity}
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item._id,
+                                          item.quantity + 1
+                                        )
+                                      }
+                                      className="w-6 h-6 border rounded flex items-center justify-center"
+                                    >
+                                      +
+                                    </button>
+                                    <span className="ml-auto font-medium">
+                                      ৳{item.price * item.quantity}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-4 pt-3 border-t">
+                            <div className="flex justify-between font-medium mb-4">
+                              <span>Total:</span>
+                              <span>৳{cartTotal}</span>
+                            </div>
+                            <Link
+                              to="/cart"
+                              className="block w-full bg-[#9EA647] text-white text-center py-2 rounded-lg hover:bg-[#818a27] transition"
+                              onClick={() => setIsCartOpen(false)}
+                            >
+                              View Cart
+                            </Link>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Top Bar */}
+          <div className="hidden md:flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img src={halalZoneCicleLogo} alt="Halal Zone" className="h-12" />
+              <span className="ml-2 text-xl font-bold text-gray-800">
+                Halal Zone
+              </span>
+            </Link>
+
+            {/* Search Bar */}
+            <div className="relative mx-4 flex-1 max-w-xl">
+              <input
+                type="text"
+                placeholder="Search for halal products..."
+                className="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
+              />
+              <button className="absolute right-3 top-2.5 text-gray-500">
+                <Search className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex items-center space-x-6">
+              {authUser ? (
+                <div className="relative" ref={accountMenuRef}>
+                  <button
+                    onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                    className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647]"
+                  >
+                    <User className="w-5 h-5" />
+                    <span>Account</span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${
+                        isAccountMenuOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Account Dropdown */}
+                  {isAccountMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50">
+                      <div className="py-1">
+                        <div className="px-4 py-2 border-b text-sm text-gray-700">
+                          {authUser?.email}{" "}
+                        </div>
+                        {authUser?.role &&
+                          ["super_admin", "admin", "modaretor"].includes(
+                            authUser.role
+                          ) && (
+                            <>
+                              <Link
+                                to="/admin/product-management"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                P.Management
+                              </Link>
+                              <Link
+                                to="/admin/orders"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                Orders
+                              </Link>
+                            </>
+                          )}
+                        {authUser?.role === "customer" && (
+                          <>
+                            <Link
+                              to="/my-orders"
+                              onClick={() => setIsMenuOpen(false)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              My Orders
+                            </Link>
+                            <Link
+                              to="/track-order"
+                              onClick={() => setIsMenuOpen(false)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Track Order
+                            </Link>
+                          </>
+                        )}
+                        <Link
+                          to="/account/profile"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          to="/account/settings"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Settings
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647]"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Login</span>
+                </Link>
+              )}
+
+              {/* Cart */}
+              <div className="relative" ref={cartRef}>
+                <button
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647] relative"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Cart</span>
+                  {cartQuantity > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartQuantity}
+                    </span>
+                  )}
+                </button>
+
+                {/* Cart Dropdown */}
+                {isCartOpen && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border z-50">
+                    <div className="p-4">
+                      <div className="flex justify-between items-center border-b pb-3">
+                        <h3 className="font-medium">
+                          Your Cart ({cartQuantity})
+                        </h3>
+                        <button onClick={() => setIsCartOpen(false)}>
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      {cartItems.length === 0 ? (
+                        <div className="py-8 text-center text-gray-500">
+                          Your cart is empty
+                        </div>
+                      ) : (
+                        <>
+                          <div className="max-h-60 overflow-y-auto py-2">
+                            {cartItems.map((item) => (
+                              <div
+                                key={item._id}
+                                className="flex items-center py-3 border-b"
+                              >
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-12 h-12 object-cover rounded"
+                                />
+                                <div className="ml-3 flex-1">
+                                  <h4 className="text-sm font-medium">
+                                    {item.name}
+                                  </h4>
+                                  <div className="flex items-center mt-1">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item._id,
+                                          item.quantity - 1
+                                        )
+                                      }
+                                      className="w-6 h-6 border rounded flex items-center justify-center"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="mx-2">
+                                      {item.quantity}
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item._id,
+                                          item.quantity + 1
+                                        )
+                                      }
+                                      className="w-6 h-6 border rounded flex items-center justify-center"
+                                    >
+                                      +
+                                    </button>
+                                    <button
+                                      onClick={() => handleRemoveItem(item._id)}
+                                      className="ml-2 text-xs text-red-500 hover:text-red-700"
+                                    >
+                                      Remove
+                                    </button>
+                                    <span className="ml-auto font-medium">
+                                      ৳{item.price * item.quantity}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-4 pt-3 border-t">
+                            <div className="flex justify-between font-medium mb-4">
+                              <span>Total:</span>
+                              <span>৳{cartTotal}</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <Link
+                                to="/cart"
+                                className="bg-white border border-[#9EA647] text-[#9EA647] py-2 rounded-lg hover:bg-gray-50 transition text-center"
+                                onClick={() => setIsCartOpen(false)}
+                              >
+                                View Cart
+                              </Link>
+                              {/* <Link
+                                to="/checkout"
+                                className="bg-[#9EA647] text-white py-2 rounded-lg hover:bg-[#818a27] transition text-center"
+                                onClick={() => setIsCartOpen(false)}
+                              >
+                                Checkout
+                              </Link> */}
+                              <button
+                                className="bg-[#9EA647] text-white py-2 rounded-lg hover:bg-[#818a27] transition text-center"
+                                onClick={handleOrderClick}
+                              >
+                                Order Now
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Categories Navigation - Desktop */}
+          {/* <div className="hidden md:flex justify-center mt-4">
+            <nav className="flex space-x-6">
+              {categories.map((category, index) => (
+                <Link
+                  key={index}
+                  to={`/category/${category
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  className="py-2 text-gray-700 hover:text-[#9EA647] font-medium transition"
+                >
+                  {category}
+                </Link>
+              ))}
+            </nav>
+          </div> */}
+        </div>
+
+        {/* Mobile Menu Button */}
+        {/* <button 
+        className="sm:hidden p-2"
+        onClick={() => setIsMenuOpen(true)}
+      >
+        <Menu className="w-6 h-6" />
+      </button> */}
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
+            <div className="absolute left-0 top-0 h-full w-4/5 bg-white shadow-lg">
+              <div className="p-4 border-b flex justify-between items-center">
+                <Link to="/" onClick={() => setIsMenuOpen(false)}>
+                  <img src={halalZoneLogo} alt="Halal Zone" className="h-10" />
+                </Link>
+                <button onClick={() => setIsMenuOpen(false)}>
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Render Sidebar content directly in mobile menu */}
+              <div className="h-[calc(100%-64px)] overflow-y-auto">
+                <Sidebar mobileView onLinkClick={() => setIsMenuOpen(false)} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Search */}
+        {isMobileSearchOpen && (
+          <div className="fixed inset-0 z-50 bg-white md:hidden">
+            <div className="p-4 border-b flex items-center">
+              <button
+                onClick={() => setIsMobileSearchOpen(false)}
+                className="mr-3"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="Search for halal products..."
+                  className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
+                  autoFocus
+                />
+                <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+              </div>
+            </div>
+
+            {/* <div className="p-4">
+              <h3 className="font-medium mb-2">Popular Searches</h3>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Honey",
+                  "Ghee",
+                  "Dates",
+                  "Mustard Oil",
+                  "Organic",
+                  "Spices",
+                ].map((term, i) => (
+                  <button
+                    key={i}
+                    className="px-3 py-1 bg-gray-100 rounded-full text-sm"
+                    onClick={() => {
+                      // Handle search
+                      setIsMobileSearchOpen(false);
+                    }}
+                  >
+                    {term}
+                  </button>
+                ))}
+              </div>
+            </div> */}
+          </div>
+        )}
+
+        <OrderConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </header>
+    </>
+  );
+}
+
 // import { Link, useLocation, useNavigate } from "react-router-dom";
 // import {
 //   ShoppingCart,
@@ -681,640 +1276,3 @@
 //     </header>
 //   );
 // }
-import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Menu, X, Search, ChevronDown } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import logo from "@/assets/campVectorLogo.png";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logout, useCurrentUser } from "@/redux/features/Auth/authSlice";
-import {
-  removeItemFromCart,
-  updateCartItemQuantity,
-} from "@/redux/features/cart/cartSlice";
-
-export default function Navbar() {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  // const location = useLocation();
-  const authUser = useAppSelector(useCurrentUser);
-  const cartItems = useAppSelector((state) => state.cart.items);
-
-  // State management
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-
-  // Refs for closing dropdowns when clicking outside
-  const accountMenuRef = useRef<HTMLDivElement>(null);
-  const cartRef = useRef<HTMLDivElement>(null);
-
-  // Categories data
-  const categories = [
-    "Mango",
-    "Mustard Oil",
-    "Ghee",
-    "Dates",
-    "Honey",
-    "Spices",
-    "Nuts & Seeds",
-    "Tea/Coffee",
-    "Dry Fruits",
-  ];
-
-  // Scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: Event) => {
-      if (
-        accountMenuRef.current &&
-        !accountMenuRef.current.contains(event.target as Node)
-      ) {
-        setIsAccountMenuOpen(false);
-      }
-
-      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
-        setIsCartOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Cart total calculation
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-  const cartQuantity = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
-  // Handle logout
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
-
-  // Handle cart item quantity change
-  const handleQuantityChange = (id: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      dispatch(updateCartItemQuantity({ _id: id, quantity: newQuantity }));
-    }
-  };
-
-  return (
-    <>
-      {/* Top Announcement Bar */}
-      {/* <div className="bg-[#9EA647] text-white text-center py-2 px-4 text-sm">
-        🚚 Free delivery on orders over 1000৳ | 📞 Call us: +8801516-559515
-      </div> */}
-
-      {/* Main Navbar */}
-      <header
-        className={`sticky top-0 z-50 bg-white shadow-sm transition-all duration-300 ${
-          isScrolled ? "py-2" : "py-3"
-        }`}
-      >
-        <div className="container mx-auto px-4">
-          {/* Mobile Top Bar */}
-          <div className="flex items-center justify-between md:hidden">
-            <button onClick={() => setIsMenuOpen(true)} className="p-2">
-              <Menu className="w-6 h-6 text-gray-700" />
-            </button>
-
-            <Link to="/" className="flex items-center">
-              <img src={logo} alt="Halal Zone" className="h-10" />
-            </Link>
-
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setIsMobileSearchOpen(true)}
-                className="p-2"
-              >
-                <Search className="w-5 h-5 text-gray-700" />
-              </button>
-              <div className="relative" ref={cartRef}>
-                <button
-                  onClick={() => setIsCartOpen(!isCartOpen)}
-                  className="p-2 relative"
-                >
-                  <ShoppingCart className="w-5 h-5 text-gray-700" />
-                  {cartQuantity > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartQuantity}
-                    </span>
-                  )}
-                </button>
-
-                {/* Mobile Cart Dropdown */}
-                {isCartOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border z-50">
-                    <div className="p-4">
-                      <div className="flex justify-between items-center border-b pb-3">
-                        <h3 className="font-medium">
-                          Your Cart ({cartQuantity})
-                        </h3>
-                        <button onClick={() => setIsCartOpen(false)}>
-                          <X className="w-5 h-5" />
-                        </button>
-                      </div>
-
-                      {cartItems.length === 0 ? (
-                        <div className="py-8 text-center text-gray-500">
-                          Your cart is empty
-                        </div>
-                      ) : (
-                        <>
-                          <div className="max-h-60 overflow-y-auto py-2">
-                            {cartItems.map((item) => (
-                              <div
-                                key={item._id}
-                                className="flex items-center py-3 border-b"
-                              >
-                                <img
-                                  src={item.image}
-                                  alt={item.name}
-                                  className="w-12 h-12 object-cover rounded"
-                                />
-                                <div className="ml-3 flex-1">
-                                  <h4 className="text-sm font-medium">
-                                    {item.name}
-                                  </h4>
-                                  <div className="flex items-center mt-1">
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(
-                                          item._id,
-                                          item.quantity - 1
-                                        )
-                                      }
-                                      className="w-6 h-6 border rounded flex items-center justify-center"
-                                    >
-                                      -
-                                    </button>
-                                    <span className="mx-2">
-                                      {item.quantity}
-                                    </span>
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(
-                                          item._id,
-                                          item.quantity + 1
-                                        )
-                                      }
-                                      className="w-6 h-6 border rounded flex items-center justify-center"
-                                    >
-                                      +
-                                    </button>
-                                    <span className="ml-auto font-medium">
-                                      ৳{item.price * item.quantity}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="mt-4 pt-3 border-t">
-                            <div className="flex justify-between font-medium mb-4">
-                              <span>Total:</span>
-                              <span>৳{cartTotal}</span>
-                            </div>
-                            <Link
-                              to="/cart"
-                              className="block w-full bg-[#9EA647] text-white text-center py-2 rounded-lg hover:bg-[#818a27] transition"
-                              onClick={() => setIsCartOpen(false)}
-                            >
-                              View Cart
-                            </Link>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop Top Bar */}
-          <div className="hidden md:flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <img src={logo} alt="Halal Zone" className="h-12" />
-              <span className="ml-2 text-xl font-bold text-gray-800">
-                Halal Zone
-              </span>
-            </Link>
-
-            {/* Search Bar */}
-            <div className="relative mx-4 flex-1 max-w-xl">
-              <input
-                type="text"
-                placeholder="Search for halal products..."
-                className="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
-              />
-              <button className="absolute right-3 top-2.5 text-gray-500">
-                <Search className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="flex items-center space-x-6">
-              {authUser ? (
-                <div className="relative" ref={accountMenuRef}>
-                  <button
-                    onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                    className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647]"
-                  >
-                    <User className="w-5 h-5" />
-                    <span>Account</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        isAccountMenuOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {/* Account Dropdown */}
-                  {isAccountMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50">
-                      <div className="py-1">
-                        <Link
-                          to="/account/orders"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsAccountMenuOpen(false)}
-                        >
-                          My Orders
-                        </Link>
-                        <Link
-                          to="/account/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsAccountMenuOpen(false)}
-                        >
-                          Profile
-                        </Link>
-                        {authUser.role === "super_admin" && (
-                          <Link
-                            to="/admin/dashboard"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Admin Dashboard
-                          </Link>
-                        )}
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  to="/login"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647]"
-                >
-                  <User className="w-5 h-5" />
-                  <span>Login</span>
-                </Link>
-              )}
-
-              {/* Cart */}
-              <div className="relative" ref={cartRef}>
-                <button
-                  onClick={() => setIsCartOpen(!isCartOpen)}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-[#9EA647] relative"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  <span>Cart</span>
-                  {cartQuantity > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartQuantity}
-                    </span>
-                  )}
-                </button>
-
-                {/* Cart Dropdown */}
-                {isCartOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border z-50">
-                    <div className="p-4">
-                      <div className="flex justify-between items-center border-b pb-3">
-                        <h3 className="font-medium">
-                          Your Cart ({cartQuantity})
-                        </h3>
-                        <button onClick={() => setIsCartOpen(false)}>
-                          <X className="w-5 h-5" />
-                        </button>
-                      </div>
-
-                      {cartItems.length === 0 ? (
-                        <div className="py-8 text-center text-gray-500">
-                          Your cart is empty
-                        </div>
-                      ) : (
-                        <>
-                          <div className="max-h-60 overflow-y-auto py-2">
-                            {cartItems.map((item) => (
-                              <div
-                                key={item._id}
-                                className="flex items-center py-3 border-b"
-                              >
-                                <img
-                                  src={item.image}
-                                  alt={item.name}
-                                  className="w-12 h-12 object-cover rounded"
-                                />
-                                <div className="ml-3 flex-1">
-                                  <h4 className="text-sm font-medium">
-                                    {item.name}
-                                  </h4>
-                                  <div className="flex items-center mt-1">
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(
-                                          item._id,
-                                          item.quantity - 1
-                                        )
-                                      }
-                                      className="w-6 h-6 border rounded flex items-center justify-center"
-                                    >
-                                      -
-                                    </button>
-                                    <span className="mx-2">
-                                      {item.quantity}
-                                    </span>
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(
-                                          item._id,
-                                          item.quantity + 1
-                                        )
-                                      }
-                                      className="w-6 h-6 border rounded flex items-center justify-center"
-                                    >
-                                      +
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        dispatch(removeItemFromCart(item._id))
-                                      }
-                                      className="ml-2 text-xs text-red-500 hover:text-red-700"
-                                    >
-                                      Remove
-                                    </button>
-                                    <span className="ml-auto font-medium">
-                                      ৳{item.price * item.quantity}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="mt-4 pt-3 border-t">
-                            <div className="flex justify-between font-medium mb-4">
-                              <span>Total:</span>
-                              <span>৳{cartTotal}</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                              <Link
-                                to="/cart"
-                                className="bg-white border border-[#9EA647] text-[#9EA647] py-2 rounded-lg hover:bg-gray-50 transition text-center"
-                                onClick={() => setIsCartOpen(false)}
-                              >
-                                View Cart
-                              </Link>
-                              <Link
-                                to="/checkout"
-                                className="bg-[#9EA647] text-white py-2 rounded-lg hover:bg-[#818a27] transition text-center"
-                                onClick={() => setIsCartOpen(false)}
-                              >
-                                Checkout
-                              </Link>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Categories Navigation - Desktop */}
-          <div className="hidden md:flex justify-center mt-4">
-            <nav className="flex space-x-6">
-              {categories.map((category, index) => (
-                <Link
-                  key={index}
-                  to={`/category/${category
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
-                  className="py-2 text-gray-700 hover:text-[#9EA647] font-medium transition"
-                >
-                  {category}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
-            <div className="absolute left-0 top-0 h-full w-4/5 bg-white shadow-lg">
-              <div className="p-4 border-b flex justify-between items-center">
-                <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                  <img src={logo} alt="Halal Zone" className="h-10" />
-                </Link>
-                <button onClick={() => setIsMenuOpen(false)}>
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="p-4">
-                {authUser ? (
-                  <div className="mb-6">
-                    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 rounded-full bg-[#9EA647] flex items-center justify-center text-white">
-                        {authUser.role === "customer"
-                          ? "U"
-                          : authUser.role === "admin"
-                          ? "A"
-                          : authUser.role === "super_admin"
-                          ? "A"
-                          : "M"}
-                      </div>
-                      <div>
-                        <p className="font-medium">
-                          {authUser.role === "customer" ? "User" : "Admin"}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {authUser.email}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 space-y-2">
-                      <Link
-                        to="/account/orders"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block p-3 rounded-lg hover:bg-gray-100"
-                      >
-                        My Orders
-                      </Link>
-                      <Link
-                        to="/account/profile"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block p-3 rounded-lg hover:bg-gray-100"
-                      >
-                        Profile
-                      </Link>
-                      {authUser.role === "super_admin" && (
-                        <Link
-                          to="/admin/dashboard"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block p-3 rounded-lg hover:bg-gray-100"
-                        >
-                          Admin Dashboard
-                        </Link>
-                      )}
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left p-3 rounded-lg hover:bg-gray-100 text-red-600"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mb-6 grid grid-cols-2 gap-3">
-                    <Link
-                      to="/login"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="bg-[#9EA647] text-white py-2 rounded-lg text-center"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/register"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="border border-[#9EA647] text-[#9EA647] py-2 rounded-lg text-center"
-                    >
-                      Register
-                    </Link>
-                  </div>
-                )}
-
-                <h3 className="font-medium text-lg mb-3">Categories</h3>
-                <div className="space-y-2">
-                  {categories.map((category, index) => (
-                    <Link
-                      key={index}
-                      to={`/category/${category
-                        .toLowerCase()
-                        .replace(/\s+/g, "-")}`}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block p-3 rounded-lg hover:bg-gray-100"
-                    >
-                      {category}
-                    </Link>
-                  ))}
-                </div>
-
-                <div className="mt-6 space-y-2">
-                  <Link
-                    to="/about"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block p-3 rounded-lg hover:bg-gray-100"
-                  >
-                    About Us
-                  </Link>
-                  <Link
-                    to="/contact"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block p-3 rounded-lg hover:bg-gray-100"
-                  >
-                    Contact Us
-                  </Link>
-                  <Link
-                    to="/privacy-policy"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block p-3 rounded-lg hover:bg-gray-100"
-                  >
-                    Privacy Policy
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Mobile Search */}
-        {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-50 bg-white md:hidden">
-            <div className="p-4 border-b flex items-center">
-              <button
-                onClick={() => setIsMobileSearchOpen(false)}
-                className="mr-3"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="Search for halal products..."
-                  className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
-                  autoFocus
-                />
-                <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
-              </div>
-            </div>
-
-            <div className="p-4">
-              <h3 className="font-medium mb-2">Popular Searches</h3>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Honey",
-                  "Ghee",
-                  "Dates",
-                  "Mustard Oil",
-                  "Organic",
-                  "Spices",
-                ].map((term, i) => (
-                  <button
-                    key={i}
-                    className="px-3 py-1 bg-gray-100 rounded-full text-sm"
-                    onClick={() => {
-                      // Handle search
-                      setIsMobileSearchOpen(false);
-                    }}
-                  >
-                    {term}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
-    </>
-  );
-}

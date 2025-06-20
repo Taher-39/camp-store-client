@@ -51,7 +51,7 @@ const Register = () => {
 
         {/* Form Section */}
         <div className="md:w-1/2 p-8">
-          <h2 className="text-center mb-6 text-2xl font-bold text-gray-800">Sign Up</h2>
+          <h2 className="text-center mb-6 text-2xl font-bold text-gray-800">Register</h2>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <input
@@ -97,7 +97,7 @@ const Register = () => {
               type="submit"
               className="w-full bg-[#9EA647] text-white py-3 rounded-lg hover:bg-[#8d973f] transition-colors font-medium"
             >
-              Sign Up
+              Register
             </button>
 
             <p className="text-center text-sm text-gray-800">

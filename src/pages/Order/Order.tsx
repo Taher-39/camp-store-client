@@ -10,6 +10,27 @@ import Modal from "react-modal";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { useCurrentUser } from "@/redux/features/Auth/authSlice";
+import Sidebar from "@/components/Sidebar/Sidebar";
+
+
+const Orders = () => {
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Desktop Sidebar (always visible on desktop) */}
+      <div className="hidden w-64 border-r bg-white shadow-md sm:block">
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <OrdersLayout />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 // Modal styles
 const customStyles = {
@@ -35,7 +56,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const Orders = () => {
+const OrdersLayout = () => {
   const authUser = useAppSelector(useCurrentUser);
   const isAdmin = authUser?.role !== "customer"
   
