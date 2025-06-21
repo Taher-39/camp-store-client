@@ -17,7 +17,8 @@ import { RootState } from "../store";
 import { logout, setUser } from "../features/Auth/authSlice";
 
 const BaseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  // baseUrl: "http://localhost:5000/api",
+  baseUrl: "https://halal-zone-server.onrender.com/api",
   credentials: "include",
   //send access token(AT) for curd oparetion
   prepareHeaders: (headers, { getState }) => {
