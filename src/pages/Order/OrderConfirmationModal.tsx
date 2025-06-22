@@ -39,7 +39,7 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
     coupon: "",
     note: "",
   });
-  
+
   const isMangoOnly = cartItems.every(
     (item) => item.category?.toLowerCase() === "mango-আম"
   );
@@ -93,6 +93,14 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
     try {
       await createOrderSchema.validate(formData, { abortEarly: false });
 
+      // Ensure user is logged in
+      if (!authUser) {
+        toast.error("অর্ডার করতে লগইন করুন!");
+        navigate("/login");
+        return;
+      }
+
+
       const orderItems = cartItems.map((item) => ({
         name: item.name,
         image: item.image,
@@ -101,24 +109,30 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
         productId: item._id,
       }));
 
+      // Extract city from address (or use a separate city field if needed)
+      const addressParts = formData.address.split(",");
+      const city =
+        addressParts.length > 1
+          ? addressParts[addressParts.length - 1].trim()
+          : "Unknown";
+
       const payload = {
         orderItems,
-        userId: authUser?.userId,
         name: formData.name,
         shippingAddress: {
           phone: formData.phone,
           address: formData.address,
-          city: formData.address.split(",").pop()?.trim() || "",
+          city: city,
         },
-        couponCodeUsed: formData.coupon,
-        note: formData.note,
-        subtotal,
+        couponCodeUsed: formData.coupon || undefined, // Send undefined instead of empty string
+        note: formData.note || undefined,
+        subtotal: subtotal,
         shipping: formData.shipping,
-        shippingCost,
-        totalPrice,
+        shippingCost: shippingCost,
+        totalPrice: totalPrice,
         paymentMethod: Payment_Type.CASH_ON_DELIVERY,
-    };
-
+        userEmail: authUser?.email,
+      };
 
       const res = await createOrder(payload).unwrap();
       toast.success(res?.data?.message);
@@ -126,12 +140,12 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
       navigate("/success");
       onClose();
     } catch (error: any) {
+      toast.error(error.data.message);
       if (error instanceof yup.ValidationError) {
         error.errors.forEach((err) => toast.error(err));
       } else {
         console.error("Order Error:", error);
         toast.error("❌ অর্ডার সম্পন্ন করতে ব্যর্থ!");
-        toast.error(error.data.message);
       }
     }
   };

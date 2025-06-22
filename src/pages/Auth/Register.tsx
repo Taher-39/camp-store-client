@@ -51,7 +51,9 @@ const Register = () => {
 
         {/* Form Section */}
         <div className="md:w-1/2 p-8">
-          <h2 className="text-center mb-6 text-2xl font-bold text-gray-800">Register</h2>
+          <h2 className="text-center mb-6 text-2xl font-bold text-gray-800">
+            Register
+          </h2>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <input
@@ -59,7 +61,11 @@ const Register = () => {
                 placeholder="Email"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
               />
-              {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -69,7 +75,11 @@ const Register = () => {
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
               />
-              {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -79,7 +89,11 @@ const Register = () => {
                 placeholder="Confirm Password"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
               />
-              {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
             <div className="flex items-start space-x-2">
@@ -89,7 +103,13 @@ const Register = () => {
                 className="h-4 w-4 mt-1 accent-[#9EA647]"
               />
               <span className="text-sm text-gray-800">
-                I agree to the <Link to="/terms" className="text-[#9EA647] hover:underline">Terms & Conditions</Link>
+                I agree to the{" "}
+                <Link
+                  to="/terms-and-conditions"
+                  className="text-[#9EA647] hover:underline"
+                >
+                  Terms & Conditions
+                </Link>
               </span>
             </div>
 
@@ -102,7 +122,10 @@ const Register = () => {
 
             <p className="text-center text-sm text-gray-800">
               Already have an account?{" "}
-              <Link to="/login" className="text-[#9EA647] hover:underline font-medium">
+              <Link
+                to="/login"
+                className="text-[#9EA647] hover:underline font-medium"
+              >
                 Login
               </Link>
             </p>

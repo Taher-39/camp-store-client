@@ -555,7 +555,7 @@ const ProductDetailsPage = () => {
                     : "bg-[#9EA647] hover:bg-[#818a27] text-white"
                 }`}
               >
-                ব্যাগে যোগ করুন
+                কার্টে যোগ করুন
               </button>
               
               <button
@@ -565,11 +565,11 @@ const ProductDetailsPage = () => {
                 ক্যাশ অন ডেলিভারিতে অর্ডার করুন
               </button>
 
-              <button onClick={handleOrderSubmit} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+              <button onClick={handleOrderSubmit} className="w-full py-3 bg-[#003F2D] hover:bg-[#003f12da] text-white rounded-lg font-medium">
                 Pay Online
               </button>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-2 gap-3 pt-2">  
                 <Link
                   to="https://m.me/halzobd"
                   target="_blank"

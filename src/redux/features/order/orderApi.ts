@@ -6,7 +6,6 @@ const orderApi = baseApi.injectEndpoints({
     // CREATE Order
     createOrder: builder.mutation({
       query: (orderData) => {
-        console.log("orderData from orderApi: ", orderData);
         return {
         url: '/orders',
         method: 'POST',

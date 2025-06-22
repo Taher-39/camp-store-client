@@ -4,7 +4,8 @@ import {
 } from "@/redux/features/cart/cartSlice";
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Loader } from "lucide-react";
+import { Tooltip } from "@/utils/Tooltip";
+import { Loader, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -35,7 +36,11 @@ export default function FeaturedProductsSection() {
     );
 
   if (!isSuccess || products.length === 0) {
-    return <div className="text-center text-lg font-bold my-10">No products available.</div>;
+    return (
+      <div className="text-center text-lg font-bold my-10">
+        No products available.
+      </div>
+    );
   }
 
   const handleAddToCart = (product: Product) => {
@@ -141,7 +146,10 @@ export default function FeaturedProductsSection() {
                       : "bg-[#9EA647] hover:bg-[#8d973f]"
                   }`}
                 >
-                  ব্যাগে যোগ করুন
+                  <Tooltip
+                    text="কার্টে যোগ করুন"
+                    children={<ShoppingCart size={30} />}
+                  />
                 </button>
               </div>
             </div>

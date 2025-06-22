@@ -69,7 +69,7 @@ function TrackOrderLayout() {
           <p className="text-red-500 text-lg">তথ্য লোড করতে সমস্যা হয়েছে</p>
           <Link
             to="/"
-            className="mt-4 inline-block px-6 py-3 text-white rounded-lg bg-[#4952b2] hover:bg-[#3712c2] transition-colors"
+            className="mt-4 inline-block px-6 py-3 rounded-lg text-white bg-[#9EA647] hover:bg-[#8d973f] transition-colors"
           >
             হোমপেজে ফিরে যান
           </Link>
@@ -93,12 +93,12 @@ function TrackOrderLayout() {
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               placeholder="আপনার অর্ডার আইডি লিখুন"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4952b2]"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9EA647]"
               required
             />
             <button
               type="submit"
-              className="px-6 py-2 text-white rounded-lg bg-[#4952b2] hover:bg-[#3712c2] transition-colors"
+              className="px-6 py-2 rounded-lg text-white bg-[#9EA647] hover:bg-[#8d973f] transition-colors"
             >
               খুঁজুন
             </button>
@@ -414,7 +414,7 @@ function TrackOrderLayout() {
 
         <Link
           to="/"
-          className="mt-10 inline-block px-6 py-3 text-white rounded-lg bg-[#4952b2] hover:bg-[#3712c2] transition-colors"
+          className="mt-10 inline-block px-6 py-3 text-white rounded-lg bg-[#9EA647] hover:bg-[#8d973f] transition-colors"
         >
           হোমপেজে ফিরে যান
         </Link>

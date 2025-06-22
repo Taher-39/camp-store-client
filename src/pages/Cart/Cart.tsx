@@ -32,6 +32,7 @@ const CartPage = () => {
       .reduce((total, item) => total + item.price * item.quantity, 0)
       .toFixed(2);
   };
+  
   const isOrderDisabled = cartItems.some(
     (item) => item.quantity < 1 || item.availableStock === 0
   );

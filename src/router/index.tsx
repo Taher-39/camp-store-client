@@ -20,6 +20,7 @@ import ReturnPolicy from "@/pages/ReturnPolicy";
 import NotFound from "@/pages/shared/NotFound";
 import SettingsLayout from "@/pages/shared/SettingsLayout";
 import SuccessPage from "@/pages/SuccessPage";
+import TermsAndConditions from "@/pages/TermsAndConditions";
 import TrackOrder from "@/pages/TrackOrder";
 import Wishlist from "@/pages/Wishlist";
 import { createBrowserRouter } from "react-router-dom";
@@ -139,6 +140,10 @@ const router = createBrowserRouter([
       {
         path: "/return-policy",
         element: <ReturnPolicy />,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <TermsAndConditions />,
       },
       {
         path: "/track-order",
