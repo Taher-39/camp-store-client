@@ -149,7 +149,7 @@ const router = createBrowserRouter([
         path: "/track-order",
         element: (
           <ProtectedRoute
-            requiredRoles={["admin", "super_admin", "modaretor", "customer"]}
+            requiredRoles={["customer"]}
           >
             <TrackOrder />
           </ProtectedRoute>

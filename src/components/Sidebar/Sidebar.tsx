@@ -51,7 +51,7 @@ const Sidebar = ({ mobileView = false, onLinkClick }: SidebarProps) => {
       name: "Track Order",
       path: "/track-order",
       icon: <History className="h-5 w-5" />,
-      roles: ["admin", "super_admin", "modaretor", "customer"],
+      roles: ["customer"],
     },
   ];
 
