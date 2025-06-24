@@ -390,7 +390,10 @@ import { FaWhatsapp } from "react-icons/fa6";
 import { magnify } from "@/utils/ImageMagnifier";
 import OrderConfirmationModal from "../Order/OrderConfirmationModal";
 import { toast } from "sonner";
-import { addItemToCart, updateCartItemQuantity } from "@/redux/features/cart/cartSlice";
+import {
+  addItemToCart,
+  updateCartItemQuantity,
+} from "@/redux/features/cart/cartSlice";
 import ReviewSection from "@/components/Review/ReviewSection";
 
 const ProductDetailsPage = () => {
@@ -411,11 +414,12 @@ const ProductDetailsPage = () => {
     }
   }, [product]);
 
-  if (isLoading) return (
-    <div className="flex justify-center items-center h-screen">
-      <Loader className="animate-spin text-4xl text-gray-600" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="animate-spin text-4xl text-gray-600" />
+      </div>
+    );
 
   if (isError || !product) {
     return (
@@ -432,23 +436,8 @@ const ProductDetailsPage = () => {
     }
 
     if (cartItems.length === 0 && product) {
-      dispatch(addItemToCart({
-        _id: product._id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        weight: product.weight,
-        availableStock: product.quantity,
-        image: product.image,
-        status: product.status,
-        category: product.category,
-        description: product.description,
-      }));
-    } else if (cartItems.length !== 0 && product) {
-      const existingProduct = cartItems.find((item) => item._id !== product._id);
-      const sameProduct = cartItems.find((item) => item._id === product._id);
-      if (existingProduct && !sameProduct) {
-        dispatch(addItemToCart({
+      dispatch(
+        addItemToCart({
           _id: product._id,
           name: product.name,
           price: product.price,
@@ -459,7 +448,28 @@ const ProductDetailsPage = () => {
           status: product.status,
           category: product.category,
           description: product.description,
-        }));
+        })
+      );
+    } else if (cartItems.length !== 0 && product) {
+      const existingProduct = cartItems.find(
+        (item) => item._id !== product._id
+      );
+      const sameProduct = cartItems.find((item) => item._id === product._id);
+      if (existingProduct && !sameProduct) {
+        dispatch(
+          addItemToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            weight: product.weight,
+            availableStock: product.quantity,
+            image: product.image,
+            status: product.status,
+            category: product.category,
+            description: product.description,
+          })
+        );
         toast.success("Product added to cart");
       }
     }
@@ -477,25 +487,29 @@ const ProductDetailsPage = () => {
       if (newQuantity > existingProduct.availableStock) {
         toast.info("Cannot add more than available stock");
       } else {
-        dispatch(updateCartItemQuantity({ _id: product._id, quantity: newQuantity }));
+        dispatch(
+          updateCartItemQuantity({ _id: product._id, quantity: newQuantity })
+        );
         toast.success("Product quantity updated in cart");
       }
     } else {
       if (quantity > product.quantity) {
         toast.info("Cannot add more than available stock");
       } else {
-        dispatch(addItemToCart({
-          _id: product._id,
-          name: product.name,
-          price: product.price,
-          quantity,
-          weight: product.weight,
-          availableStock: product.quantity,
-          image: product.image,
-          status: product.status,
-          category: product.category,
-          description: product.description,
-        }));
+        dispatch(
+          addItemToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity,
+            weight: product.weight,
+            availableStock: product.quantity,
+            image: product.image,
+            status: product.status,
+            category: product.category,
+            description: product.description,
+          })
+        );
         toast.success("Product added to cart");
       }
     }
@@ -522,21 +536,31 @@ const ProductDetailsPage = () => {
         {/* Product Details - Middle Column */}
         <div className="lg:col-span-4">
           <div className="bg-white p-6 rounded-xl shadow-md h-full">
-            <h1 className="text-2xl md:text-3xl font-bold mb-4 text-gray-800">{product.name}</h1>
-            
+            <h1 className="text-2xl md:text-3xl font-bold mb-4 text-gray-800">
+              {product.name}
+            </h1>
+
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-2xl font-bold text-[#9EA647]">{product.price} টাকা</span>
+                <span className="text-2xl font-bold text-[#9EA647]">
+                  {product.price} টাকা
+                </span>
                 <span className="text-gray-500">/ {product.weight} কেজি</span>
               </div>
 
               <div className="flex items-center gap-2 mb-4">
-                <span className={`px-2 py-1 rounded text-sm font-medium ${
-                  product.quantity > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded text-sm font-medium ${
+                    product.quantity > 0
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {product.status}
                 </span>
-                <span className="text-sm text-gray-600">Category: {product.category}</span>
+                <span className="text-sm text-gray-600">
+                  Category: {product.category}
+                </span>
               </div>
 
               <p className="text-green-600 font-medium mb-6">
@@ -557,19 +581,32 @@ const ProductDetailsPage = () => {
               >
                 কার্টে যোগ করুন
               </button>
-              
+
               <button
                 onClick={handleOrderClick}
-                className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium"
+                disabled={quantity > product.quantity || product.quantity === 0}
+                className={`w-full py-3 text-white rounded-lg font-medium transition-colors duration-200 ${
+                  quantity > product.quantity || product.quantity === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
               >
                 ক্যাশ অন ডেলিভারিতে অর্ডার করুন
               </button>
 
-              <button onClick={handleOrderSubmit} className="w-full py-3 bg-[#003F2D] hover:bg-[#003f12da] text-white rounded-lg font-medium">
+              <button
+                onClick={handleOrderSubmit}
+                disabled={quantity > product.quantity || product.quantity === 0}
+                className={`w-full py-3 text-white rounded-lg font-medium transition-colors duration-200 ${
+                  quantity > product.quantity || product.quantity === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#003F2D] hover:bg-[#003f12da]"
+                }`}
+              >
                 Pay Online
               </button>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">  
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <Link
                   to="https://m.me/halzobd"
                   target="_blank"
@@ -592,11 +629,17 @@ const ProductDetailsPage = () => {
 
             {/* Product Description */}
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3 text-gray-800">Product Description</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-800">
+                Product Description
+              </h3>
               <div className="prose max-w-none text-gray-700">
-                {product.description.split("\n").map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-3">{paragraph}</p>
-                ))}
+                {product.description
+                  .split("\n")
+                  .map((paragraph: string, index: number) => (
+                    <p key={index} className="mb-3">
+                      {paragraph}
+                    </p>
+                  ))}
               </div>
             </div>
 
@@ -615,7 +658,9 @@ const ProductDetailsPage = () => {
           <div className="space-y-6">
             {/* Features Card */}
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-[#9EA647] border-b pb-2">Key Features</h3>
+              <h3 className="text-xl font-semibold mb-4 text-[#9EA647] border-b pb-2">
+                Key Features
+              </h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -638,10 +683,14 @@ const ProductDetailsPage = () => {
 
             {/* Delivery Info Card */}
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-[#9EA647] border-b pb-2">Delivery Information</h3>
+              <h3 className="text-xl font-semibold mb-4 text-[#9EA647] border-b pb-2">
+                Delivery Information
+              </h3>
               <div className="space-y-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium text-gray-800 mb-2">Inside Dhaka</h4>
+                  <h4 className="font-medium text-gray-800 mb-2">
+                    Inside Dhaka
+                  </h4>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• 1-2 business days</li>
                     <li>• Delivery charge free for Mango</li>
@@ -649,7 +698,9 @@ const ProductDetailsPage = () => {
                   </ul>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium text-gray-800 mb-2">Outside Dhaka</h4>
+                  <h4 className="font-medium text-gray-800 mb-2">
+                    Outside Dhaka
+                  </h4>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• 2-4 business days</li>
                     <li>• Delivery charge free for Mango</li>
