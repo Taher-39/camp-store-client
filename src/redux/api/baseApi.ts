@@ -18,6 +18,7 @@ import { RootState } from "../store";
 import { logout, setUser } from "../features/Auth/authSlice";
 
 const BaseQuery = fetchBaseQuery({
+  // baseUrl: "http://localhost:5000/api",
   baseUrl: "https://halal-zone-server.onrender.com/api",
   credentials: "include",
   //send access token(AT) for curd oparetion
@@ -40,7 +41,8 @@ const CustomBaseQueryWitheRefreashToken: BaseQueryFn<
   let result = await BaseQuery(args, api, extraOptions);
   // if access token expire, send refresh token(RT) from cookies
   if (result.error?.status === 401) {
-    const res = await fetch("https://halal-zone-server.onrender.com/api/auth/refresh-token", {
+    // const res = await fetch("http://localhost:5000/api/auth/refresh-token", {
+      const res = await fetch("https://halal-zone-server.onrender.com/api/auth/refresh-token", {
       method: "POST",
       credentials: "include",
     });
@@ -71,4 +73,4 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: CustomBaseQueryWitheRefreashToken,
   endpoints: () => ({}),
-}); 
+});

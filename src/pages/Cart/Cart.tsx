@@ -43,6 +43,7 @@ const CartPage = () => {
     }
 
     setIsModalOpen(true);
+    // navigate('/checkout')
   };
 
   return (
@@ -128,9 +129,10 @@ const CartPage = () => {
                 onClick={isOrderDisabled ? undefined : handleOrderClick}
                 disabled={isOrderDisabled}
               >
+                {/* চেক আউট  */}
                 অর্ডার করুন
               </button>
-            </div>
+            </div> 
           </div>
           <OrderConfirmationModal
             isOpen={isModalOpen}

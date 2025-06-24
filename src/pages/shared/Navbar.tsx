@@ -463,20 +463,20 @@ export default function Navbar() {
                                 className="bg-white border border-[#9EA647] text-[#9EA647] py-2 rounded-lg hover:bg-gray-50 transition text-center"
                                 onClick={() => setIsCartOpen(false)}
                               >
-                                View Cart
+                                কার্ট দেখুন 
                               </Link>
                               {/* <Link
                                 to="/checkout"
                                 className="bg-[#9EA647] text-white py-2 rounded-lg hover:bg-[#818a27] transition text-center"
                                 onClick={() => setIsCartOpen(false)}
                               >
-                                Checkout
+                                চেক আউট
                               </Link> */}
                               <button
                                 className="bg-[#9EA647] text-white py-2 rounded-lg hover:bg-[#818a27] transition text-center"
                                 onClick={handleOrderClick}
                               >
-                                Order Now
+                                অর্ডার করুন
                               </button>
                             </div>
                           </div>

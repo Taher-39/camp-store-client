@@ -117,6 +117,7 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
           : "Unknown";
 
       const payload = {
+        email: authUser.email,
         orderItems,
         name: formData.name,
         shippingAddress: {
@@ -131,7 +132,6 @@ const OrderConfirmationModal: React.FC<OrderModalProps> = ({
         shippingCost: shippingCost,
         totalPrice: totalPrice,
         paymentMethod: Payment_Type.CASH_ON_DELIVERY,
-        userEmail: authUser?.email,
       };
 
       const res = await createOrder(payload).unwrap();
