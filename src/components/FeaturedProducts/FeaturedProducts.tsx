@@ -5,15 +5,16 @@ import {
 import { useGetProductsQuery } from "@/redux/features/product/productApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Tooltip } from "@/utils/Tooltip";
-import { Loader, ShoppingCart } from "lucide-react";
+import { AlertTriangleIcon, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import HalalLoader from "../Loader/Loader";
 
 interface Product {
   _id: string;
   name: string;
-  image: string;
+  images: string[];
   price: number;
   description: string;
   category: string;
@@ -31,7 +32,8 @@ export default function FeaturedProductsSection() {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader className="animate-spin text-4xl text-gray-600" />
+        {/* <Loader className="animate-spin text-4xl text-gray-600" /> */}
+        <HalalLoader isLoading={isLoading} />
       </div>
     );
 
@@ -67,7 +69,7 @@ export default function FeaturedProductsSection() {
             quantity,
             weight: product.weight,
             availableStock: product.quantity,
-            image: product.image,
+            image: product.images[0],
             status: product.status,
             category: product.category,
             description: product.description,
@@ -89,11 +91,21 @@ export default function FeaturedProductsSection() {
               key={product._id}
               className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center transition-transform transform hover:scale-105"
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover mb-4 rounded-lg"
-              />
+              {product.images?.length > 0 ? (
+                <div className="flex gap-2">
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-full h-48 object-cover mb-4 rounded-lg"
+                  />
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <AlertTriangleIcon className="h-5 w-5 text-red-500" />
+                  <span>No image available</span>
+                </div>
+              )}
+
               <h3 className="text-lg font-medium text-gray-800 mb-2">
                 {product.name}
               </h3>

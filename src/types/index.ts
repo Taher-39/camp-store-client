@@ -7,7 +7,7 @@ export type TProduct = {
   price: number;
   quantity: number;
   weight: number;
-  image?: string;
+  images: string[];
 };
 
 export type TCategory = {

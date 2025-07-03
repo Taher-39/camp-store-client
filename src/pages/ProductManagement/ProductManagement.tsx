@@ -8,6 +8,7 @@ import {
   Loader,
   Trash2,
   AlertTriangle,
+  X,
 } from "lucide-react";
 import {
   useGetProductsQuery,
@@ -19,7 +20,6 @@ import "./ProductManagement.css";
 import { TProduct } from "@/types";
 import { CloudinaryUploadWidget } from "@/components/Review/CloudinaryUploadWidget";
 import Sidebar from "@/components/Sidebar/Sidebar";
-
 
 const ProductManagementPage = () => {
   return (
@@ -38,8 +38,6 @@ const ProductManagementPage = () => {
     </div>
   );
 };
-
-
 
 // Initialize Modal
 Modal.setAppElement("#root");
@@ -63,7 +61,7 @@ interface ProductFormData {
   price: string;
   quantity: string;
   weight: string;
-  image: string;
+  images: string[];
 }
 
 const ProductManagementPageLayout: React.FC = () => {
@@ -83,7 +81,9 @@ const ProductManagementPageLayout: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // const [image, setImage] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  // const [images, setImages] = useState<string>("");
+  const [images, setImages] = useState<string[]>([]);
+
   const [categories, setCategories] = useState<string[]>([
     "Mango-আম",
     "Ata-আটা",
@@ -128,7 +128,7 @@ const ProductManagementPageLayout: React.FC = () => {
   // Handle Edit Product
   const handleEdit = (product: TProduct) => {
     setEditingProduct(product);
-    setImageUrl(product.image || "");
+    setImages(product.images);
     setIsModalOpen(true);
   };
 
@@ -142,16 +142,15 @@ const ProductManagementPageLayout: React.FC = () => {
       quantity: 0,
       weight: 0,
       status: "out-of-stock",
-      image: "",
+      images: [""],
     });
-    setImageUrl("");
+    setImages([]);
     setIsModalOpen(true);
   };
 
   // Handle Save (Create or Update)
   const handleSave = async (productData: ProductFormData) => {
     if (!editingProduct) return;
-
     const formattedProduct: Omit<TProduct, "_id"> = {
       name: productData.name,
       description: productData.description,
@@ -160,7 +159,7 @@ const ProductManagementPageLayout: React.FC = () => {
       quantity: Number(productData.quantity),
       weight: Number(productData.weight),
       status: Number(productData.quantity) > 0 ? "in-stock" : "out-of-stock",
-      image: imageUrl || editingProduct.image,
+      images: images || editingProduct.images,
     };
 
     try {
@@ -187,10 +186,12 @@ const ProductManagementPageLayout: React.FC = () => {
   };
 
   const handleImageUpload = (url: string) => {
-    setImageUrl(url);
-    toast.success("Image uploaded successfully.");
+    if (images.length >= 5) {
+      toast.warning("Maximum 5 images allowed per product");
+      return;
+    }
+    setImages((prev) => [...prev, url]);
   };
-
 
   // Add New Category
   const addNewCategory = () => {
@@ -251,11 +252,21 @@ const ProductManagementPageLayout: React.FC = () => {
             {currentProducts.map((product: TProduct) => (
               <tr key={product._id}>
                 <td className="border px-4 py-2">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-16 h-16 object-cover"
-                  />
+                  {product.images?.length > 0 ? (
+                    <div className="flex gap-2">
+                    
+                      <img
+                          src={product.images[0]}
+                          alt={`Product images`}
+                          className="w-16 h-10 object-cover rounded"
+                        />
+                    </div>
+                  ): (
+                    <div className="flex gap-2">
+                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      <span>No image available</span>
+                    </div>
+                  )}
                 </td>
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">
@@ -368,7 +379,7 @@ const ProductManagementPageLayout: React.FC = () => {
                   price: formData.get("price") as string,
                   quantity: formData.get("quantity") as string,
                   weight: formData.get("weight") as string,
-                  image: formData.get("image") as string,
+                  images: images,
                 };
                 handleSave(productData);
               }}
@@ -430,18 +441,48 @@ const ProductManagementPageLayout: React.FC = () => {
                   </button>
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-2">Add Photo</p>
+                  <p className="text-sm font-medium mb-2">Add Photos</p>
                   <CloudinaryUploadWidget
                     onUpload={handleImageUpload}
-                    folder="halal-zone/reviews"
+                    folder="halal-zone/products"
+                    maxFiles={5}
                   />
-                  {imageUrl && (
+
+                  {images.length > 0 && (
+                    <div className="mt-4">
+                      <h4 className="text-sm font-medium mb-2">
+                        Uploaded Images:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {images.map((img, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={img}
+                              alt={`Product ${index + 1}`}
+                              className="w-16 h-16 object-cover rounded"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setImages(images.filter((_, i) => i !== index));
+                              }}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* {images && (
                     <img
-                      src={imageUrl}
+                      src={images}
                       alt="Product"
                       className="mt-2 w-10 h-10 object-cover"
                     />
-                  )}
+                  )} */}
                 </div>
               </div>
 

@@ -87,6 +87,7 @@ const ReviewSection = ({ productId }: { productId: string }) => {
             <CloudinaryUploadWidget
               onUpload={handleImageUpload}
               folder="halal-zone/reviews"
+              maxFiles={5}
             />
             {images.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
