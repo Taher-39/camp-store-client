@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { FacebookIcon, InstagramIcon, TwitterIcon, Loader } from "lucide-react";
+import { FacebookIcon, Loader } from "lucide-react";
 import teamMember1 from "@/assets/pp.jpg";
-import teamMember2 from "@/assets/nayeem.png"
+import teamMember2 from "@/assets/nayeem.png";
 
 const AboutUsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,22 +26,23 @@ const AboutUsPage = () => {
             <h2 className="text-2xl font-bold mb-4">যোগাযোগ</h2>
             <p>ফোন: +৮৮০১৫১৬৫৫৯৫১৫</p>
             <p>ইমেইল: taherpust@gmail.com</p>
-            <p>ঠিকানা: হায়াত মোড়, চাঁপাইনবাবগঞ্জ, রাজশাহী</p>
+            <p>ঠিকানা: নিয়ামতপুর, নওগাঁ, রাজশাহী</p>
           </section>
 
           {/* গুগল ম্যাপ */}
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4">আমাদের অবস্থান</h2>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3634.5914464906833!2d88.285334!3d24.594817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fdad8e5efb1a6b%3A0x8e0ee503f70d7d8d!2z4Kas4Ka-4Ka54KeN4Kao4Ka_4Kac4Ka_IOCmqOCnjeCmrOCmv-CmrOCmuCDgpqzgpr7gpqTgpr_gp43gpqgg4KaV4Kao4Ka_4Ka84Kao4Ka_4Ka-4Ka5!5e0!3m2!1sen!2sbd!4v1717930632292!5m2!1sen!2sbd"
-              width="100%"
-              height="450"
-              frameBorder="0"
-              style={{ border: 0 }}
-              allowFullScreen
-              aria-hidden="false"
-              tabIndex={0}
-            ></iframe>
+            <div className="w-full h-[450px]">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3633.547151594236!2d88.56358661469764!3d24.860116984050774!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fc2e4c4b6f9d5b%3A0x3f7f8c9b3c4e2d7a!2sNiamatpur%20Upazila%2C%20Naogaon%2C%20Bangladesh!5e0!3m2!1sen!2sbd!4v1727952000000!5m2!1sen!2sbd"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </section>
 
           {/* সোশ্যাল মিডিয়া */}
@@ -55,7 +56,7 @@ const AboutUsPage = () => {
               >
                 <FacebookIcon className="text-3xl text-blue-600" />
               </a>
-              <a
+              {/* <a
                 href="https://www.twitter.com/halzobd"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -68,7 +69,7 @@ const AboutUsPage = () => {
                 rel="noopener noreferrer"
               >
                 <InstagramIcon className="text-3xl text-pink-600" />
-              </a>
+              </a> */}
             </div>
           </section>
 
@@ -107,12 +108,11 @@ const AboutUsPage = () => {
                   alt="Naeem"
                   className="w-40 h-40 rounded-full mx-auto mb-4"
                 />
-                <h3 className="text-xl font-bold">নাঈম</h3>
+                <h3 className="text-xl font-bold">মাহমুদ আলী</h3>
                 <p className="text-gray-500">মার্কেটিং এক্সপার্ট</p>
                 <p className="mt-2">
-                  নাঈম, আল জামিয়াহ আস-সালাফিয়াহ, রাজশাহীর একজন ছাত্র। তিনি
-                  তরুণদের মধ্যে হালাল ও ইসলামী পণ্যের সচেতনতা বৃদ্ধি করতে কাজ
-                  করছেন।
+                  মাহমুদ আলী, একজন তরুণ লেখক, গবেষক ও উদ্যোক্তা। তিনি সমাজের
+                  মধ্যে হালাল ও ইসলামী পণ্যের সচেতনতা বৃদ্ধি করতে কাজ করছেন।
                 </p>
               </div>
             </div>
