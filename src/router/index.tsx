@@ -1,4 +1,3 @@
-import IndivisualCategory from "@/components/CategoriesSection/IndivisualCategory";
 import MainLayout from "@/components/Layouts/MainLayouts";
 import { ProtectedRoute } from "@/components/Layouts/ProtectedRoute";
 import AboutUsPage from "@/pages/AboutUs/AboutUs";
@@ -104,10 +103,6 @@ const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <ProductDetailsPage />,
-      },
-      {
-        path: "/category",
-        element: <IndivisualCategory />,
       },
       {
         path: "/cart",
