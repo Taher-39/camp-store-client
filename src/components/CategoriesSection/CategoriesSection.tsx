@@ -25,7 +25,7 @@ export default function CategoriesSection() {
       if (!acc.some((item: TCategory) => item.category === product.category)) {
         acc.push({
           category: product.category,
-          image: product.image,
+          image: product.images[0],
           _id: product._id,
         });
       }

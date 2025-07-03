@@ -88,9 +88,9 @@ const ProductDetailsPage = () => {
     setIsModalOpen(true);
   };
 
-  // const handleOrderSubmit = () => {
-  //   toast.info("Feature Comming Soon!");
-  // };
+  const handleOrderSubmit = () => {
+    toast.info("Feature Comming Soon!");
+  };
 
   const handleAddToCart = () => {
     const existingProduct = cartItems.find((item) => item._id === product._id);
@@ -204,7 +204,7 @@ const ProductDetailsPage = () => {
                 ক্যাশ অন ডেলিভারিতে অর্ডার করুন
               </button>
 
-              {/* <button
+              <button
                 onClick={handleOrderSubmit}
                 disabled={quantity > product.quantity || product.quantity === 0}
                 className={`w-full py-3 text-white rounded-lg font-medium transition-colors duration-200 ${
@@ -214,7 +214,7 @@ const ProductDetailsPage = () => {
                 }`}
               >
                 Pay Online
-              </button> */}
+              </button>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <Link

@@ -35,7 +35,7 @@ export default function BestSellingSection() {
               className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center"
             >
               <img
-                src={product.image}
+                src={product.images[0]}
                 alt={product.name}
                 className="w-full h-48 object-cover mb-4 rounded-lg"
               />
